@@ -53,8 +53,22 @@
 
 
 /// Temporary variable to contain the current class during the loop
+///
 /// @type {String}
 $vary-temp: '' !global;
+
+/// Default action for vary mixin. Possible values:
+/// - 'mod': BEM modifier (.foo--class)
+/// - 'body': Body class (.is-class .foo)
+///
+/// @type {String}
+$vary-default-action: 'mod' !global;
+
+/// Body class prefix. 
+/// Will work as .#{$vary-bodyclass}foo
+///
+/// @type {String}
+$vary-bodyclass: 'is-' !global;
 
 
 
@@ -66,13 +80,13 @@ $vary-temp: '' !global;
 ///
 /// @type Map
 $vary-map: (
-  user: (
+  'user': (
     'color-primary': #333,
     'color-secondary': #069,
     'color-tertiary': red,
     'border-box': 1px solid #ff0
   ),
-  admin: (
+  'admin': (
     'color-primary': #f0f,
     'color-secondary': #000,
     'color-tertiary': red,
@@ -82,7 +96,7 @@ $vary-map: (
 
 
 
-/// Gets a value from the £vary-list
+/// Gets a value from the $vary-list
 ///
 /// @param {String} $key - Name of the variable you want to get
 /// @param {String} $class - Name of the kind you want to access
@@ -104,6 +118,43 @@ $vary-map: (
     }
   } @else {
     @error "There is no '#{$class}' class in your variations list.";
+  }
+
+  @return $ret;
+}
+
+
+
+/// Filters the keys provieded into a final list
+///
+/// @param {List} $included - List with the keys to use
+/// @param {List} $excluded - List with the keys NOT to use
+///
+/// @example scss
+///   vary-filter(("color", "border", "thickness"), ("border"));
+///   // -> ("color", "thickness")
+///
+/// @returns {List} List of the keys to use without the ones excluded
+@function vary-filter($included, $excluded: ()) {
+  $ret: ();
+
+  // If haven't specified anything, default to all
+  @if $included == "all" {
+    $included: map-keys($vary-map);
+  }
+
+  // Build the specified key list
+  @each $key in $included {
+    // If it's in our map
+    @if not map-has-key($vary-map, $key) {
+      @error $key;
+      //@error "There is no '#{$key}' class in your variations list.";
+    } 
+    // But not excluded
+    @elseif not map-has-key($excluded, $key) {
+      // Add it to the final list
+      $ret: append($ret, $key, comma);
+    }
   }
 
   @return $ret;
@@ -145,26 +196,22 @@ $vary-map: (
 @mixin vary-body($class) {
   // Update the global helper class
   $vary-temp: $class !global;
+  $selector-list: ();
 
-  @if not & {
-
+  @if & {
     @at-root{
-      .is-#{$vary-temp} {
-        #{&} {
-          @content;
-        }
-      }
-    }
-
-  } @else {
-
-    @at-root{
-      .is-#{$vary-temp} {
+      .#{$vary-bodyclass}#{$class} & {
         @content;
       }
     }
-
+  } @else {
+    @at-root{
+      .#{$vary-bodyclass}#{$class} {
+        @content;
+      }
+    }
   }
+
 }
 
 
@@ -254,39 +301,22 @@ $vary-map: (
 ///     color: #f0f;  
 ///   }
 ///   
-@mixin vary($type: "body", $class: "all"){
-  // If you want it for a specific class
-  @if $class != "all" {
-    @if not map-has-key($vary-map, $class){
-      @error "There is no '#{$class}' class in your variations list.";
-    }@else{
-      @if $type == "body" {
-        // bodyclass
-        @include vary-body($class) {
-          @content;
-        }
-      } @else {
-        // BEM modifier
-        @include vary-mod($class) {
-          @content;
-        }
+@mixin vary($action: $vary-default-action, $for: "all", $not: ()){
+  $variations: vary-filter($for, $not);
+
+  // Go through all the variations
+  @if $action == "body" {
+    // bodyclass
+    @each $class in $variations {
+      @include vary-body($class) {
+        @content;
       }
     }
   } @else {
-    // Go through all the variations
-    @if $type == "body" {
-      // bodyclass
-      @each $class, $class-map in $vary-map {
-        @include vary-body($class) {
-          @content;
-        }
-      }
-    } @else {
-      // BEM modifier
-      @each $class, $class-map in $vary-map {
-        @include vary-mod($class) {
-          @content;
-        }
+    // BEM modifier
+    @each $class in $variations {
+      @include vary-mod($class) {
+        @content;
       }
     }
   }
