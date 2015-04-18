@@ -52,23 +52,25 @@
 
 
 
-/// Temporary variable to contain the current class during the loop
+/// Temporary variable to contain the current class during the loop.
 ///
 /// @type {String}
 $vary-temp: '' !global;
+
 
 /// Default action for vary mixin. Possible values:
 /// - 'mod': BEM modifier (.foo--class)
 /// - 'body': Body class (.is-class .foo)
 ///
 /// @type {String}
-$vary-default-action: 'mod' !global;
+$vary-default-action: 'mod' !default;
+
 
 /// Body class prefix. 
 /// Will work as .#{$vary-bodyclass}foo
 ///
 /// @type {String}
-$vary-bodyclass: 'is-' !global;
+$vary-default-bodyclass: 'is-' !default;
 
 
 
@@ -151,7 +153,7 @@ $vary-map: (
       //@error "There is no '#{$key}' class in your variations list.";
     } 
     // But not excluded
-    @elseif not map-has-key($excluded, $key) {
+    @elseif not index($excluded, $key) {
       // Add it to the final list
       $ret: append($ret, $key, comma);
     }
@@ -200,13 +202,13 @@ $vary-map: (
 
   @if & {
     @at-root{
-      .#{$vary-bodyclass}#{$class} & {
+      .#{$vary-default-bodyclass}#{$class} & {
         @content;
       }
     }
   } @else {
     @at-root{
-      .#{$vary-bodyclass}#{$class} {
+      .#{$vary-default-bodyclass}#{$class} {
         @content;
       }
     }
