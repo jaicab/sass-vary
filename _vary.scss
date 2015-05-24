@@ -63,7 +63,7 @@ $vary-temp: '' !global;
 /// - 'body': Body class (.is-class .foo)
 ///
 /// @type {String}
-$vary-default-action: 'mod' !default;
+$vary-default-action: 'body' !default;
 
 
 /// Body class prefix. 
@@ -82,19 +82,19 @@ $vary-default-bodyclass: 'is-' !default;
 ///
 /// @type Map
 $vary-map: (
-  'user': (
+  user: (
     'color-primary': #333,
     'color-secondary': #069,
     'color-tertiary': red,
     'border-box': 1px solid #ff0
   ),
-  'admin': (
+  admin: (
     'color-primary': #f0f,
     'color-secondary': #000,
     'color-tertiary': red,
     'border-box': 10px solid red
   )
-);
+) !default;
 
 
 
@@ -164,6 +164,47 @@ $vary-map: (
 
 
 
+/// Adds a body class between the html class and the rest of selectors
+///
+/// @param {List} $selector list - List of selectors
+/// @param {List} $bodyclass - Body class to put between
+///
+/// @example scss
+///   vary-htmlclass((.js .foo, .csstransitions .element), ".is-admin");
+///   // -> (.js .is-admin .foo, .csstransitions .is-admin .element)
+///
+/// @returns {List} List of selectors to 
+@function vary-htmlclass($selector-list, $bodyclass) {
+  $ret: ();
+
+  // Go through each selector
+  @each $selector in $selector-list {
+    $with-bodyclass: ();
+
+    // Just html class - .htmlclass
+    $with-bodyclass: append($with-bodyclass, nth($selector, 1));
+
+    // Add body class - .htmlclass .bodyclass
+    $with-bodyclass: append($with-bodyclass, unquote($bodyclass), space);
+
+    // If more than one element
+    @if(length($selector)>1){
+      // Each restant element - .htmlclass .bodyclass .otherselectors
+      @for $i from 2 through length($selector) {
+        // Add the other selectors
+        $with-bodyclass: append($with-bodyclass, nth($selector, $i));
+      }
+    }
+
+    // Merge it all in the selector list
+    $ret: append($ret, $with-bodyclass, comma);
+  }
+
+  @return $ret;
+}
+
+
+
 /// Creates variations with a .is-class body class.
 ///
 /// @param {String} $class - Body class key to use.
@@ -195,15 +236,25 @@ $vary-map: (
 ///     color: #333;  
 ///   }
 ///  
-@mixin vary-body($class) {
+@mixin vary-body($class, $html-class: false) {
   // Update the global helper class
   $vary-temp: $class !global;
   $selector-list: ();
 
   @if & {
-    @at-root{
-      .#{$vary-default-bodyclass}#{$class} & {
-        @content;
+    @if $html-class == true {
+      $selector: &;
+      $bodyclass: ".#{$vary-default-bodyclass}#{$class}";
+      @at-root{
+        #{vary-htmlclass($selector, $bodyclass)} {
+          @content;
+        }
+      }
+    } @else {
+      @at-root{
+        .#{$vary-default-bodyclass}#{$class} & {
+          @content;
+        }
       }
     }
   } @else {
@@ -303,14 +354,14 @@ $vary-map: (
 ///     color: #f0f;  
 ///   }
 ///   
-@mixin vary($action: $vary-default-action, $for: "all", $not: ()){
+@mixin vary($action: $vary-default-action, $for: "all", $not: (), $html-class: false){
   $variations: vary-filter($for, $not);
 
   // Go through all the variations
   @if $action == "body" {
     // bodyclass
     @each $class in $variations {
-      @include vary-body($class) {
+      @include vary-body($class, $html-class) {
         @content;
       }
     }
