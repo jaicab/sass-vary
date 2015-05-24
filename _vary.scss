@@ -58,6 +58,12 @@
 $vary-temp: '' !global;
 
 
+/// Set to true if using libsass. Uses some extra CSS on HTML class scenario.
+///
+/// @type {String}
+$vary-libsass: false !default;
+
+
 /// Default action for vary mixin. Possible values:
 /// - 'mod': BEM modifier (.foo--class)
 /// - 'body': Body class (.is-class .foo)
@@ -174,16 +180,19 @@ $vary-map: (
 ///   // -> (.js .is-admin .foo, .csstransitions .is-admin .element)
 ///
 /// @returns {List} List of selectors to 
-@mixin vary-htmlclass {
-  $selector-list: &;
-  
+@function vary-htmlclass($selector-list) {
+  $ret: ();
+
   // Go through each selector
   @each $selector in $selector-list {
     $with-bodyclass: ();
 
     // Just html class - .htmlclass
-    $htmlclass: nth($selector, 1);
-    
+    $with-bodyclass: append($with-bodyclass, nth($selector, 1));
+
+    // Add body class - .htmlclass .bodyclass
+    $with-bodyclass: append($with-bodyclass, unquote(".#{$vary-default-bodyclass}#{$vary-temp}"), space);
+
     // If more than one element
     @if(length($selector)>1){
       // Each restant element - .htmlclass .bodyclass .otherselectors
@@ -192,22 +201,12 @@ $vary-map: (
         $with-bodyclass: append($with-bodyclass, nth($selector, $i), space);
       }
     }
-    
+
     // Merge it all in the selector list
-    @at-root{
-      html{
-        &#{$htmlclass} {
-          .#{$vary-default-bodyclass}#{$vary-temp} {
-            #{$with-bodyclass} {
-              @content;
-            }
-          }
-        }
-      }
-    }
-    
+    $ret: append($ret, $with-bodyclass, comma);
   }
-  //@error $ret;
+
+  @return $ret;
 }
 
 
@@ -250,19 +249,33 @@ $vary-map: (
 
   @if & {
     @if $html-class == true {
-      @include vary-htmlclass {
-        @content;
-      };
+      $selector: &;
+      
+      @if $vary-libsass == true {
+        @at-root{
+          html{
+            &#{vary-htmlclass($selector)} {
+              @content;
+            }
+          }
+        }
+      } @else {
+        @at-root{
+          #{vary-htmlclass($selector)} {
+            @content;
+          }
+        }
+      }
     } @else {
       @at-root{
-        .#{$vary-default-bodyclass}#{$vary-temp} & {
+        .#{$vary-default-bodyclass}#{$class} & {
           @content;
         }
       }
     }
   } @else {
     @at-root{
-      .#{$vary-default-bodyclass}#{$vary-temp} {
+      .#{$vary-default-bodyclass}#{$class} {
         @content;
       }
     }
