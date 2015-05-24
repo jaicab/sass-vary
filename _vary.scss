@@ -174,33 +174,40 @@ $vary-map: (
 ///   // -> (.js .is-admin .foo, .csstransitions .is-admin .element)
 ///
 /// @returns {List} List of selectors to 
-@function vary-htmlclass($selector-list, $bodyclass) {
-  $ret: ();
-
+@mixin vary-htmlclass {
+  $selector-list: &;
+  
   // Go through each selector
   @each $selector in $selector-list {
     $with-bodyclass: ();
 
     // Just html class - .htmlclass
-    $with-bodyclass: append($with-bodyclass, nth($selector, 1));
-
-    // Add body class - .htmlclass .bodyclass
-    $with-bodyclass: append($with-bodyclass, unquote($bodyclass), space);
-
+    $htmlclass: nth($selector, 1);
+    
     // If more than one element
     @if(length($selector)>1){
       // Each restant element - .htmlclass .bodyclass .otherselectors
       @for $i from 2 through length($selector) {
         // Add the other selectors
-        $with-bodyclass: append($with-bodyclass, nth($selector, $i));
+        $with-bodyclass: append($with-bodyclass, nth($selector, $i), space);
       }
     }
-
+    
     // Merge it all in the selector list
-    $ret: append($ret, $with-bodyclass, comma);
+    @at-root{
+      html{
+        &#{$htmlclass} {
+          .#{$vary-default-bodyclass}#{$vary-temp} {
+            #{$with-bodyclass} {
+              @content;
+            }
+          }
+        }
+      }
+    }
+    
   }
-
-  @return $ret;
+  //@error $ret;
 }
 
 
@@ -243,23 +250,19 @@ $vary-map: (
 
   @if & {
     @if $html-class == true {
-      $selector: &;
-      $bodyclass: ".#{$vary-default-bodyclass}#{$class}";
-      @at-root{
-        #{vary-htmlclass($selector, $bodyclass)} {
-          @content;
-        }
-      }
+      @include vary-htmlclass {
+        @content;
+      };
     } @else {
       @at-root{
-        .#{$vary-default-bodyclass}#{$class} & {
+        .#{$vary-default-bodyclass}#{$vary-temp} & {
           @content;
         }
       }
     }
   } @else {
     @at-root{
-      .#{$vary-default-bodyclass}#{$class} {
+      .#{$vary-default-bodyclass}#{$vary-temp} {
         @content;
       }
     }
