@@ -1,0 +1,86 @@
+/*!
+// Add style info here if doing WordPress
+*/
+
+/*=======================
+		$BASE
+=======================*/
+
+// Text
+$font : Helvetica, "Helvetica Neue", Arial, sans-serif;
+$font-secondary : "Abril Fatface", Bodoni, Garamond, Georgia, serif;
+$mq-base-font-size: 16px;
+$line-height-ratio: 1.2;
+
+// Generic path for resources
+$cdn-path: '../';
+
+// Base border radius
+$base-radius: 0.5em;
+
+// Max width container
+$max-width: 72em;
+
+// Margins and spacing consistency
+$space: 1em;
+
+
+/*=======================
+		$COLORS
+=======================*/
+
+$color-primary: #fd3001;
+$color-secondary: #010;
+$color-tertiary: #fffeea;
+
+$color-text: $color-secondary;
+$color-bg: $color-tertiary;
+
+$color-link: #0f75bc;
+
+$color-success: #daebc1;
+$color-cancel: #C62230;
+
+
+/*=======================
+		$FORMS
+=======================*/
+
+$input-border-width: .2em;
+$border-width: .5em;
+
+/*=======================
+	  $BREAKPOINTS
+=======================*/
+
+
+// Media queries
+$mq-breakpoints: (
+    tiny:       15em,
+    small:      320px,
+    smallish:   480px,
+    medium:     640px,
+    mediumish:  720px,
+    big:        960px,
+    bigish:     1350px,
+    wide:       1500px
+);
+
+
+
+/*=======================
+	  	$EXTEND
+=======================*/
+
+// ext()
+$ext-budget: (
+  total: 15,
+  heading: 12,
+  form: 5
+);
+
+$ext-default-options: (
+  warn-over: true
+);
+
+

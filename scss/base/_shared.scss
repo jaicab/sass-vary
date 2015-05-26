@@ -1,0 +1,51 @@
+
+// Commonly used placeholders
+
+
+// Micro clearfix: http://nicolasgallagher.com/micro-clearfix-hack/
+%clearfix{
+    *zoom: 1; /* IE < 8 */
+
+	&:before,
+	&:after {
+	  content: " ";
+	  display: table;
+	}
+	&:after {
+	    clear: both;
+	}
+}
+
+// Hidden
+%ninja{
+	display: none !important;
+	visibility: hidden;
+}
+
+// Max width container
+.wrapper{
+	@extend %clearfix;
+	max-width: $max-width;
+	margin: 0 auto;
+}
+
+// Margins
+.margin{
+	padding: 0 $space;
+}
+.no-margin{
+	margin: 0 !important;
+}
+
+.fr{
+	float: right;
+}
+
+.fl{
+	float: left;
+}
+
+.center{
+	text-align: center;
+}
+

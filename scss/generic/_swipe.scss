@@ -1,0 +1,44 @@
+.js{
+	.swipe {
+		overflow: hidden;
+		visibility: hidden;
+		position: relative;
+	}
+	.swipe-wrap {
+		overflow: hidden;
+		position: relative;
+
+		> div {
+			float:left;
+			width:100%;
+			position: relative;
+			text-align: center;
+		}
+	}
+}
+
+.swipe__list{
+	list-style: none;
+	text-align: center;
+	margin: 0;
+	padding: 0;
+	
+	li{
+		width: 1em;
+		height: 1em;
+		margin: 1em .25em .25em .25em;
+		border-radius: .5em;
+		border-radius: 50%;
+
+		border: .1em solid white;
+
+		&:hover{
+			cursor: pointer;
+		}
+
+		&.on{
+			background: white;
+			cursor: auto;
+		}
+	}
+}

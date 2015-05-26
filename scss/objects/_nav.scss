@@ -1,0 +1,90 @@
+
+.nav{
+	text-align: center;
+
+	ul,
+	li{
+		list-style: none !important;
+		padding: 0;
+		margin: 0;
+	}
+
+	a{
+		display: block;
+		color: $color-tertiary;
+	    padding: .25em .45em;
+	    font-size: 1em;
+	    text-transform: lowercase;
+	    //background: $color-secondary;
+	}
+
+	li{
+		border: .1em solid $color-tertiary;
+		margin: .25em .1em;
+		display: inline-block;
+	}
+
+	@include mq($from: small) {
+		border-right: $border-width/2 solid $color-tertiary;
+		overflow: hidden;
+
+		li{
+			width: 25%;
+			float: left;
+			margin: 0;
+			border: $border-width/2 solid $color-tertiary;
+			border-right-width: 0 !important;
+		}
+
+		a{
+			padding: .6em .05em;
+		}
+
+		@include mq($until: medium) {	
+			li:nth-child(2) {
+				width: 28%;
+			}
+
+			li:nth-child(3) {
+				width: 22%;
+			}
+		}
+	}
+
+	@include mq($from: medium) {
+		border-width: $border-width;
+		
+		li{
+			border-width: $border-width;
+		}
+
+
+		a{
+			font-family: $font-secondary;
+			font-size: 1.4em;
+			padding: .5em;
+		}
+
+	}
+
+	@include mq($from: big) {
+		border: none;
+		border-top: $border-width/4 solid $color-tertiary;
+
+		li{
+			border: none;
+			float: none;
+			width: auto;
+			display: block;
+			border-bottom: $border-width/4 solid $color-tertiary;
+		}
+
+		a{
+			padding: 1.5vh;
+		}
+	}
+}
+
+.nav a{
+	display: block;
+}

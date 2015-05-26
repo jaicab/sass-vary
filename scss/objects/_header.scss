@@ -1,0 +1,61 @@
+
+// Headers
+
+.header{
+	@extend %clearfix;	
+	background: $color-primary;
+}
+
+.nav-toggle-menu{
+	float: right;
+
+	.is-vishidden{display: none;}
+
+	&:before{
+		content:'\2630';
+		font-weight: 800;
+		font-size: 2em;
+	}
+}
+
+
+.logo{
+	display: block;
+	text-align: center;
+}
+
+
+@include mq($from: small) {
+	.logo{
+		border: .25rem solid $color-tertiary;
+		border-bottom: none;
+	}
+}
+
+
+@include mq($from: medium) {	
+
+	.header{
+		background: $color-primary;
+	}
+
+	.logo{			
+		background: $color-primary;
+		border-width: .5rem;
+	}
+
+}
+
+@include mq($from: big) {
+
+	.header{
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		width: 17em;
+
+
+		border: $border-width solid $color-tertiary;
+	}
+}

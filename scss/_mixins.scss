@@ -1,0 +1,30 @@
+// Media query mixin
+
+@function gradient($color-start: #fff, $color-end: #000, $deg: 0deg){
+  @return linear-gradient($deg, $color-end 0%, $color-start 100%);
+}
+
+@function auto-gradient($color: #069, $percent: 7.5%, $deg: 0deg){
+  @return gradient(lighten($color, $percent), darken($color, $percent), $deg);
+}
+
+
+// You should style these three pseudo-selectors to keep it accessible
+@mixin hover(){
+	&:hover,
+	&:active,
+	&:focus{
+		@content;
+	}
+}
+
+@mixin headings(){
+	h1,h2,h3,h4,h5,h6{
+		@content;
+	}
+}
+
+// Shorthand for px to em conversion
+@function em($value){
+	@return mq-px2em($value);
+}

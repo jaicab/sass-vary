@@ -1,0 +1,23 @@
+
+
+main, footer{
+	.wrapper{
+		margin: 0 1em;
+	}
+
+	@include mq($from: medium) {
+		.wrapper{
+			margin: 0 21%;
+			padding: 1em 0 3em;
+		}
+	}
+
+	@include mq($from: big) {
+		padding-left: 17em;
+
+		.wrapper{
+			width: 32em;
+			margin: 0 auto;
+		}
+	}
+}

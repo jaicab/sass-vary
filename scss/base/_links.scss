@@ -1,0 +1,12 @@
+
+
+a{
+	text-decoration: none;
+	color: $color-link;
+
+	&:hover,
+	&:active,
+	&:focus{
+		color: $color-primary;
+	}
+}

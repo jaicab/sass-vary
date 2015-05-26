@@ -1,0 +1,117 @@
+
+
+form{
+	padding-bottom: 1em;
+	overflow: hidden;
+}
+
+
+// GENERIC
+%rounded-grey-box{
+	border: $input-border-width/2 solid #fff;
+	padding: .7em;
+	background: $color-bg;
+	color: $color-text;
+	border-radius: 0;
+}
+
+
+input,
+button,
+textarea,
+select,
+.button{
+	@extend %rounded-grey-box;
+
+    -webkit-appearance:none;
+	display: inline-block;
+	width: 100%;
+
+	font: inherit;
+	outline: none;
+	
+	transition: .25s box-shadow, .25s border;
+
+	&:disabled{
+		color: #A9A9A9;
+		background: #ECECEC;
+	}
+
+	&:focus{
+		border-color: $color-primary;
+	}
+}
+
+// SELECT
+
+select{
+	width: 100%;
+	display: block;
+	padding-right: 2em;
+}
+// Hide the select arrow on IE10+
+select::-ms-expand {
+    display: none;
+}
+
+.select{
+	position: relative;
+	display: inline-block;
+	width: 100%;
+}
+
+// TEXTAREA
+
+textarea{
+	resize: vertical;
+	min-height: 7em;
+}
+
+
+// Icon on the right
+.select:after{
+	content: "\25bc";
+	color: $color-primary;
+	display: inline-block;
+	padding: 0 .75em;
+	speak: none;
+	pointer-events: none;
+	font-size: .75em;
+
+	line-height: 2.5em;
+	position: absolute;
+	top: .1em;
+	bottom: .1em;
+	right: .1em;
+	background: #fff;
+	border: .5em solid $color-bg;
+}
+
+// BUTTONS
+
+input[type="submit"],
+input[type="reset"],
+input[type="button"],
+button,
+.button{
+	display: inline-block;
+	width: auto;
+	padding: .75em 1em;
+	margin: 0 .1em;
+	box-shadow: none !important;
+	
+	transition: .25s all;
+	
+	border: none;
+	color: #fff;
+	background: $color-primary;
+	background: auto-gradient($color-primary);
+	font-weight: 700;
+
+	&:hover{
+		color: $color-link;
+		cursor: pointer;
+	}
+}
+
+

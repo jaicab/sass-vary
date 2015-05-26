@@ -1,0 +1,17 @@
+
+
+p{
+	margin: 0 0 1em 0;
+
+	+ p{
+		margin-top: 1em;
+	}
+}
+
+hr{
+	border-top: none;
+	border-top: .1em solid #000;
+	display: block;
+	margin: 1em;
+	clear: both;
+}

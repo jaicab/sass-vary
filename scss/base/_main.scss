@@ -1,0 +1,30 @@
+
+
+*{
+	&,
+	&:before,
+	&:after{
+		box-sizing: border-box;
+	}
+}
+
+html{
+    font:#{($mq-base-font-size/16px)*1em}/#{$line-height-ratio} $font;
+    color: $color-text;
+    background: $color-bg;
+}
+
+
+body{
+	position: relative;
+}
+
+picture{
+	text-align: center;
+	display: inline-block;
+}
+
+img{
+	max-width: 100%;
+	border: none;
+}

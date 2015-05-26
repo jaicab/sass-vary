@@ -1,0 +1,26 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+
+    Developed by The Base Creative Team
+
+
+# THANKS
+
+    <name>
+
+
+# TECHNOLOGY
+
+## Sass
+- Harry Robert's file structure - http://cssguidelin.es/
+- normalize.css - http://necolas.github.io/normalize.css/
+- sass-mq - https://github.com/sass-mq/sass-mq
+- ext() - http://jaicab.com/ext/
+
+## JavaScript
+- Modernizr - http://modernizr.com
+- picturefill - https://github.com/scottjehl/picturefill
+- Swipe.js - https://github.com/thebird/Swipe
+- Webshims - http://afarkas.github.io/webshim/demos/

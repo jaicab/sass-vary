@@ -1,0 +1,26 @@
+
+.footer{
+	background: $color-secondary;
+	padding: 2em 0 0;
+	color: $color-tertiary;
+
+	a{
+		color: inherit;
+		text-decoration: underline;
+	}
+
+	@include mq($from: small) {
+
+		text-align: center;
+		border: $border-width/2 solid $color-tertiary;
+	}
+
+	@include mq($from: medium) {
+		border-width: $border-width;
+	}
+
+	@include mq($from: big) {
+		padding-left: 17em;
+	}
+
+}

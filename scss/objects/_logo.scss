@@ -1,0 +1,48 @@
+
+.logo{
+  font-size: 1em;
+  font-size: 5vw;
+}
+
+
+.logo__vary {
+  display: block;
+  color: $color-tertiary;
+  font-family: "Abril Fatface", Bodoni, Garamond, Georgia, serif;
+  font-weight: 300;
+  font-size: 4em;
+  line-height: 1;
+  position: relative;
+  top: .15em;
+  padding-left: .4em;
+  padding-top: .0em;
+}
+
+.logo__sass {
+  display: block;
+  color: $color-secondary;
+  font-weight: 900;
+  font-size: 3.5em;
+  line-height: 1;
+  letter-spacing: -.04em;
+  padding-right: .9em;
+  padding-bottom: .4em;
+}
+
+
+@include mq($from: medium) {
+  .logo{
+    padding: .5em 0;
+    font-size: 1.5em;
+    font-size: 3.25vw;
+  }
+}
+
+@include mq($from: big) {
+
+  .logo{
+    font-size: 1em;
+    border: none;
+  }
+
+}
