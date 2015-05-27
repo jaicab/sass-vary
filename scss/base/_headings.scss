@@ -30,7 +30,7 @@ h2{
 	hyphens: auto;
 	text-rendering: optimizeLegibility;
 	letter-spacing: -.009em;
-	line-height: 1.2;
+	line-height: 1.15;
 }
 
 @include mq($from: medium) {
@@ -45,7 +45,7 @@ h2{
 
 @include mq($from: mediumish) {
 	.intro{
-		font-size: 2.1em;
+		font-size: 2em;
 		margin-bottom: 1.5em;
 	}
 
