@@ -40,10 +40,12 @@
 		<div class="wrapper">
 			<h1 class="intro">The vary mixin is the most complete, scalable and modular theming solution out there.</h1>
 
-			<h2>Theming made easy</h2>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi, neque nihil magnam quo non ad qui, quos totam! Optio animi doloremque pariatur architecto, dicta officia doloribus voluptates suscipit maxime reprehenderit.</p>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos autem quod ipsa esse, laudantium ad veniam dolorum totam, dolores possimus incidunt eveniet consequuntur, eaque praesentium porro aut asperiores. Cumque, totam.</p>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus dolore fugiat, quis harum suscipit laborum esse. Quidem consectetur esse quo architecto quae quasi molestiae ipsam, libero, in vitae accusantium ad!</p>
+			<h2>Quick start</h2>
+			<p>vary covers every aspect of CSS theming, from using body classes to BEM modifiers with all in between, solving lots of consistency  and manteinance isssues. Also, it's compatible with <b>Sass 3.2+</b> and <b>libsass 3.2+</b>.</p>
+
+			<p>But let's see how this works. The most common theming pattern is using a <code>.is-foo</code> body class, where <i>foo</i> is the entity for which the CSS variations are destinated to (e.g. user, admin). Each of these entities will have an different styling.</p>
+
+			<p>In order to relate the values with the entities, vary uses Sass maps. Then when you are styling a selector, you can include variations using vary. Withing that scope, you can request values like the primary color. By default, vary will loop through the entities in the map and create a selector per entity, each with the corresponding primary color.</p>
 
 		</div>
 
@@ -63,7 +65,7 @@ $vary-map: (
 .foo{
 	background: red;
 
-	@include vary{
+	@include vary {
 		background: vary-get('color-primary');
 		border: vary-get('border');
 	}
@@ -97,8 +99,9 @@ $vary-map: (
 	
 		<div class="wrapper">
 		
-			<div class="copyright">Licensed under the <a href="http://opensource.org/licenses/MIT">MIT license</a>.</div>
-			<div class="madeby">Built with love by <a href="http://jaicab.com" title="Frontend architect Jaime Caballero based in London">Jaime Caballero</a>.</div>
+			<div class="footer__text copyright">Licensed under the <a href="http://opensource.org/licenses/MIT">MIT license</a>.</div>
+			<div class="footer__text github">Check it out <a href="https://github.com/jaicab/sass-vary">on GitHub</a>.</div>
+			<div class="footer__text madeby">Built with love by <a href="http://jaicab.com" title="Frontend architect Jaime Caballero based in London">Jaime Caballero</a>.</div>
 		</div>
 	</footer>
 </body>
@@ -114,9 +117,3 @@ $vary-map: (
     r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
     ga('create','UA-XXXXX-X','auto');ga('send','pageview');
 </script>-->
-
-<!-- jQuery -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="js/jquery-1.11.1.min.js">\x3C/script>')</script>
-
-<script src="js/core.js"></script>

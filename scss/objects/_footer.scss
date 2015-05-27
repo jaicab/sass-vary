@@ -1,7 +1,8 @@
 
 .footer{
 	background: $color-secondary;
-	padding: 2em 0;
+	padding: 1.5em 0;
+	margin-top: 2em;
 	color: $color-tertiary;
 
 	a{
@@ -9,19 +10,28 @@
 		text-decoration: underline;
 	}
 
-	@include mq($from: small) {
+}
 
+.footer__text{
+	margin: .5em 0;
+}
+
+@include mq($from: small) {
+	.footer{
 		text-align: center;
 		border: $border-width/2 solid $color-tertiary;
 	}
+}
 
-	@include mq($from: medium) {
+@include mq($from: medium) {
+	.footer{
 		padding-bottom: 0;
 		border-width: $border-width;
 	}
+}
 
-	@include mq($from: big) {
+@include mq($from: big) {
+	.footer{
 		//padding-left: 17em;
 	}
-
 }
