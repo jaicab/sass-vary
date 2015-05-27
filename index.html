@@ -38,7 +38,7 @@
 	
 	<main role="main">
 		<div class="wrapper">
-			<h1 class="intro">The vary mixin lets you implement consistent, scalable and modular CSS theming in no time.</h1>
+			<h1 class="intro">The vary mixin is the most complete, scalable and modular theming solution out there.</h1>
 
 			<h2>Theming made easy</h2>
 			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi, neque nihil magnam quo non ad qui, quos totam! Optio animi doloremque pariatur architecto, dicta officia doloribus voluptates suscipit maxime reprehenderit.</p>
@@ -51,19 +51,17 @@
 			<div class="code__panel code__scss"><pre>
 $vary-map: (
   user: (
-    'color-primary': #333,
-    'color-secondary': #069,
+    'color-primary': blue,
     'border': 1px solid #ff0
   ),
   admin: (
-    'color-primary': #f0f,
-    'color-secondary': #000,
-    'border': 10px solid red
+    'color-primary': pink,
+    'border': 10px solid black
   )
 );
 
 .foo{
-	color: #fff;
+	background: red;
 
 	@include vary{
 		background: vary-get('color-primary');
@@ -73,16 +71,16 @@ $vary-map: (
 			</pre></div>
 			<div class="code__panel code__css"><pre>
 .foo{
-	color: #fff;	
+	background: red;	
 }
 
 .is-user .foo{
-	background: #069;
+	background: blue;
 	border: 1px solid #ff0;
 }
 
 .is-user .foo{
-	background: #f0f;
+	background: pink;
 	border: 10px solid red;
 }
 			</pre></div>
