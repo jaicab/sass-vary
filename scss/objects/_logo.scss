@@ -41,6 +41,8 @@
 @include mq($from: big) {
 
   .logo{
+    padding: 1em 0;
+    padding: 3vh 0;
     font-size: 1em;
     border: none;
   }
