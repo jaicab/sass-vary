@@ -21,7 +21,7 @@ h1{
 
 .intro{
 	font-family: $font;
-	margin: 2em 0;
+	margin: 2em -1em;
 }
 
 @include mq($from: medium) {
