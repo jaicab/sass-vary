@@ -3,11 +3,11 @@
 main, footer{
 	.wrapper{
 		margin: 0 1em;
+		margin: 0 21%;
 	}
 
 	@include mq($from: medium) {
 		.wrapper{
-			margin: 0 21%;
 			padding: 1em 0 3em;
 		}
 	}

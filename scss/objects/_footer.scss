@@ -1,7 +1,7 @@
 
 .footer{
 	background: $color-secondary;
-	padding: 2em 0 0;
+	padding: 2em 0;
 	color: $color-tertiary;
 
 	a{
@@ -16,6 +16,7 @@
 	}
 
 	@include mq($from: medium) {
+		padding-bottom: 0;
 		border-width: $border-width;
 	}
 
