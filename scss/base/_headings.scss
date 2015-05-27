@@ -11,28 +11,48 @@ h1,h2,h3,h4,h5,h6{
 
 	+ p{
 		margin-top: .5em;
-		text-indent: 1em;
+   		hyphens: auto;
 	}
 }
 
 h1{
+	font-size: 1.5em;
+}
+
+h2{
 	font-size: 1.6em;
+	text-rendering: optimizeLegibility;
 }
 
 .intro{
 	font-family: $font;
-	margin: 2em -.5em;
+	margin: 1.5em -.5em;
+	hyphens: auto;
+	text-rendering: optimizeLegibility;
+	letter-spacing: -.009em;
+	line-height: 1.2;
 }
 
 @include mq($from: medium) {
 	.intro{
 		margin: 1em -1em 2em -1em;
 	}
+
+	h2{
+		font-size: 1.8em;
+	}
+}
+
+@include mq($from: mediumish) {
+	.intro{
+		font-size: 2.1em;
+		margin-bottom: 1.5em;
+	}
+
 }
 
 @include mq($from: big) {
 	.intro{
-		margin: 1em -2em 1.5em -2em;
-		font-size: 2.5em;
+		margin: 1em -1em 1.5em -1em;
 	}
 }

@@ -6,17 +6,28 @@ main, footer{
 	}
 
 	@include mq($from: medium) {
+		font-size: 1.1em;
+
 		.wrapper{
-			margin: 0 21%;
+			margin: 0 15%;
 			padding: 1em 0 3em;
 		}
 	}
 
-	@include mq($from: big) {
-		padding-left: 17em;
+	@include mq($from: mediumish) {
+		font-size: 1.2em;
 
 		.wrapper{
-			width: 32em;
+			margin: 0 21%;
+		}
+	}
+
+	@include mq($from: big) {
+		font-size: 1.2em;
+		padding-left: 17rem;
+
+		.wrapper{
+			width: 35rem;
 			margin: 0 auto;
 		}
 	}
