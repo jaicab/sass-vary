@@ -41,11 +41,9 @@
 			<h1 class="intro">The vary mixin is the most complete, scalable and modular theming solution out there.</h1>
 
 			<h2>Quick start</h2>
-			<p>vary covers every aspect of CSS theming, from using body classes to BEM modifiers with all in between, solving lots of consistency  and manteinance isssues. Also, it's compatible with <b>Sass 3.2+</b> and <b>libsass 3.2+</b>.</p>
+			<p>Compatible with <b>Sass 3.2+</b> and <b>libsass 3.2+</b>, vary covers every aspect of CSS theming, from using body classes to BEM modifiers with all in between, solving lots of consistency  and manteinance isssues.</p>
 
 			<p>But let's see how this works. The most common theming pattern is using a <code>.is-foo</code> body class, where <i>foo</i> is the entity for which the CSS variations are destinated to (e.g. user, admin). Each of these entities will have an different styling.</p>
-
-			<p>In order to relate the values with the entities, vary uses Sass maps. Then when you are styling a selector, you can include variations using vary. Withing that scope, you can request values like the primary color. By default, vary will loop through the entities in the map and create a selector per entity, each with the corresponding primary color.</p>
 
 		</div>
 
@@ -89,16 +87,15 @@ $vary-map: (
 		</div>
 
 		<div class="wrapper">
-			<h2>Quick demo</h2>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Expedita voluptate velit nisi asperiores! Ipsa quam totam adipisci, esse nulla aut harum ab repellat placeat. Tenetur vero voluptates voluptatum aut nobis!</p>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nobis autem quo nemo, porro libero aspernatur vero voluptates nesciunt delectus! Quos, placeat, aliquam. Nihil saepe, nesciunt molestiae fugiat, reprehenderit voluptas. Dolor!</p>
+			<p>In order to relate the values with the entities, vary uses Sass maps. Build your <code>$vary-map</code> and you can start creating variations of any selector.</p>
+			<p>Withing the vary scope, you can request values like the primary color with <code>vary-get</code>. By default, vary will loop through the entities in the map and create a selector per entity, each with the corresponding primary color.</p>
+			<p>Keeping the entity names in a single place across the codebase helps with consistency and scalability. If you ever need to create another variation, just add the values to the map and it will replicate accross the CSS.</p>
 		</div>
 	</main>
 
 	<footer class="footer" role="contentinfo">
 	
 		<div class="wrapper">
-		
 			<div class="footer__text copyright">Licensed under the <a href="http://opensource.org/licenses/MIT">MIT license</a>.</div>
 			<div class="footer__text github">Check it out <a href="https://github.com/jaicab/sass-vary">on GitHub</a>.</div>
 			<div class="footer__text madeby">Built with love by <a href="http://jaicab.com" title="Frontend architect Jaime Caballero based in London">Jaime Caballero</a>.</div>

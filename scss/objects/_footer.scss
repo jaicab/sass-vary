@@ -1,7 +1,10 @@
 
 .footer{
-	background: $color-secondary;
-	padding: 1.5em 0;
+	.wrapper{
+		padding: 1.5em 0;
+		background: $color-secondary;
+	}
+
 	margin-top: 2em;
 	color: $color-tertiary;
 
@@ -32,6 +35,8 @@
 
 @include mq($from: big) {
 	.footer{
-		//padding-left: 17em;
+		.wrapper{
+			padding: 3em 0;
+		}
 	}
 }
