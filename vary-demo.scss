@@ -1,0 +1,376 @@
+@charset "UTF-8";
+
+////
+/// -------------------------------------------------------------------------------------
+///
+///                         _vary.scss v1.0 - Consisten CSS variations
+///
+///                                     jaicab.com/vary/
+///
+/// -------------------------------------------------------------------------------------
+///
+/// List all your variations in your $vary-map.
+/// vary will loop through them and create the code for you, helping with consistency in a DRYer code.
+///
+/// You can start using this library like so:
+///
+///   $vary-map: (
+///      user: (
+///        'color-primary': #333,
+///        'border': "1px solid red",
+///      ),
+///      admin: (
+///        'color-primary': #f0f,
+///        'border': "10px dashed blue",
+///      )
+///    );
+///
+///   .foo{
+///     font-size: .9em;
+///       
+///     @include vary {
+///       color: vary-get('color-primary');
+///     }
+///   }
+///
+///   // Compiles into
+///   .foo{
+///     font-size: .9em;
+///   }
+///   .is-user .foo{
+///     color: #333;  
+///     border: 1px solid red;  
+///   }
+///   .is-admin .foo{
+///     color: #f0f;  
+///     border: 10px dashed blue;  
+///   }
+///
+///
+/// 2015 - Made with ♥ by Jaime Caballero (@jaicab_)
+////
+
+
+
+/// Temporary variable to contain the current class during the loop.
+///
+/// @type {String}
+$vary-temp: '' !global;
+
+
+/// Default action for vary mixin. Possible values:
+/// - 'mod': BEM modifier (.foo--class)
+/// - 'body': Body class (.is-class .foo)
+///
+/// @type {String}
+$vary-default-action: 'body' !default;
+
+
+/// Body class prefix. 
+/// Will work as .#{$vary-bodyclass}foo
+///
+/// @type {String}
+$vary-default-bodyclass: 'is-' !default;
+
+
+
+/// List of variations
+/// Should be put with your other variables, before the mixins.
+///
+/// Set as many keys as you wish, will be used to keep consistency.
+/// The variables under each key should be consistent in order to loop over all the keys.
+///
+/// @type Map
+$vary-map: (
+  user: (
+    'color-primary': #333,
+    'color-secondary': #069,
+    'color-tertiary': red,
+    'border-box': 1px solid #ff0
+  ),
+  admin: (
+    'color-primary': #f0f,
+    'color-secondary': #000,
+    'color-tertiary': red,
+    'border-box': 10px solid red
+  )
+) !default;
+
+
+
+/// Gets a value from the $vary-list
+///
+/// @param {String} $key - Name of the variable you want to get
+/// @param {String} $class - Name of the kind you want to access
+///
+/// @example scss
+///   vary-get("color-primary", "user");
+///   // -> #333
+///
+/// @returns {String} Value of key for that kind
+@function vary-get($key, $class: $vary-temp) {
+  $ret: '';
+
+  @if map-has-key($vary-map, $class) {
+    $class-map: map-get($vary-map, $class);
+    @if map-has-key($class-map, $key) {
+      $ret: map-get($class-map, $key);
+    } @else {
+      @error "The class '#{$class}' doesn't have a value for '#{$key}'.";
+    }
+  } @else {
+    @error "There is no '#{$class}' class in your variations list.";
+  }
+
+  @return $ret;
+}
+
+
+
+/// Filters the keys provieded into a final list
+///
+/// @param {List} $included - List with the keys to use
+/// @param {List} $excluded - List with the keys NOT to use
+///
+/// @example scss
+///   vary-filter(("color", "border", "thickness"), ("border"));
+///   // -> ("color", "thickness")
+///
+/// @returns {List} List of the keys to use without the ones excluded
+@function vary-filter($included, $excluded: ()) {
+  $ret: ();
+
+  // If haven't specified anything, default to all
+  @if $included == "all" {
+    $included: map-keys($vary-map);
+  }
+
+  // Build the specified key list
+  @each $key in $included {
+    // If it's in our map
+    @if not map-has-key($vary-map, $key) {
+      @error $key;
+      //@error "There is no '#{$key}' class in your variations list.";
+    } 
+    // But not excluded
+    @elseif not index($excluded, $key) {
+      // Add it to the final list
+      $ret: append($ret, $key, comma);
+    }
+  }
+
+  @return $ret;
+}
+
+
+
+/// Adds a body class between the html class and the rest of selectors
+///
+/// @param {List} $selector list - List of selectors
+/// @param {List} $bodyclass - Body class to put between
+///
+/// @example scss
+///   vary-htmlclass((.js .foo, .csstransitions .element), ".is-admin");
+///   // -> (.js .is-admin .foo, .csstransitions .is-admin .element)
+///
+/// @returns {List} List of selectors to 
+@function vary-htmlclass($selector-list, $bodyclass) {
+  $ret: ();
+
+  // Go through each selector
+  @each $selector in $selector-list {
+    $with-bodyclass: ();
+
+    // Just html class - .htmlclass
+    $with-bodyclass: append($with-bodyclass, nth($selector, 1));
+
+    // Add body class - .htmlclass .bodyclass
+    $with-bodyclass: append($with-bodyclass, unquote($bodyclass), space);
+
+    // If more than one element
+    @if(length($selector)>1){
+      // Each restant element - .htmlclass .bodyclass .otherselectors
+      @for $i from 2 through length($selector) {
+        // Add the other selectors
+        $with-bodyclass: append($with-bodyclass, nth($selector, $i));
+      }
+    }
+
+    // Merge it all in the selector list
+    $ret: append($ret, $with-bodyclass, comma);
+  }
+
+  @return $ret;
+}
+
+
+
+/// Creates variations with a .is-class body class.
+///
+/// @param {String} $class - Body class key to use.
+///
+/// @example scss
+///   $vary-map: (
+///      user: (
+///        'color-primary': #333,
+///        'color-secondary': #069,
+///      ),
+///      admin: (
+///        'color-primary': #f0f,
+///        'color-secondary': #000,
+///      )
+///    );
+///   .foo{
+///     font-size: .9em;
+///       
+///     @include vary-body("user") {
+///       color: vary-get('color-primary');
+///     }
+///   }
+///
+///   // Compiles into
+///   .foo{
+///     font-size: .9em;
+///   }
+///   .is-user .foo{
+///     color: #333;  
+///   }
+///  
+@mixin vary-body($class, $html-class: false) {
+  // Update the global helper class
+  $vary-temp: $class !global;
+  $selector-list: ();
+
+  @if & {
+    @if $html-class == true {
+      $selector: &;
+      $bodyclass: ".#{$vary-default-bodyclass}#{$class}";
+      @at-root{
+        #{vary-htmlclass($selector, $bodyclass)} {
+          @content;
+        }
+      }
+    } @else {
+      @at-root{
+        .#{$vary-default-bodyclass}#{$class} & {
+          @content;
+        }
+      }
+    }
+  } @else {
+    @at-root{
+      .#{$vary-default-bodyclass}#{$class} {
+        @content;
+      }
+    }
+  }
+
+}
+
+
+
+/// Creates BEM modifiers for a wrapper element
+///
+/// @param {String} $class - Modifier key to use.
+///
+/// @example scss
+///   $vary-map: (
+///      user: (
+///        'color-primary': #333,
+///        'color-secondary': #069,
+///      ),
+///      admin: (
+///        'color-primary': #f0f,
+///        'color-secondary': #000,
+///      )
+///    );
+///   .foo{
+///     font-size: .9em;
+///       
+///     @include vary-mod("user") {
+///       color: vary-get('color-primary');
+///     }
+///   }
+///
+///   // Compiles into
+///   .foo{
+///     font-size: .9em;
+///   }
+///   .foo--user{
+///     color: #333;  
+///   }
+///   
+@mixin vary-mod($class) {
+  // Update the global helper class
+  $vary-temp: $class !global;
+
+  // Do we have a wrapping selector?
+  @if not & {
+    @error "You can't create a modifier without a base.";
+  } @else {
+
+    @at-root {
+      &--#{$class} {
+        @content;
+      }
+    }
+  
+  }
+}
+
+
+
+/// Creates variations for $vary-map
+///
+/// @param {String} $class - Body class key to use.
+///
+/// @example scss
+///   $vary-map: (
+///      user: (
+///        'color-primary': #333,
+///        'color-secondary': #069,
+///      ),
+///      admin: (
+///        'color-primary': #f0f,
+///        'color-secondary': #000,
+///      )
+///    );
+///   .foo{
+///     font-size: .9em;
+///       
+///     @include vary {
+///       color: vary-get('color-primary');
+///     }
+///   }
+///
+///   // Compiles into
+///   .foo{
+///     font-size: .9em;
+///   }
+///   .is-user .foo{
+///     color: #333;  
+///   }
+///   .is-admin .foo{
+///     color: #f0f;  
+///   }
+///   
+@mixin vary($action: $vary-default-action, $for: "all", $not: (), $html-class: false){
+  $variations: vary-filter($for, $not);
+
+  // Go through all the variations
+  @if $action == "body" {
+    // bodyclass
+    @each $class in $variations {
+      @include vary-body($class, $html-class) {
+        @content;
+      }
+    }
+  } @else {
+    // BEM modifier
+    @each $class in $variations {
+      @include vary-mod($class) {
+        @content;
+      }
+    }
+  }
+}

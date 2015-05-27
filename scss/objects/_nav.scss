@@ -42,6 +42,7 @@
 
 		a{
 			padding: .6em .05em;
+			background: $color-primary;
 		}
 
 		@include mq($until: medium) {	
@@ -72,15 +73,9 @@
 	}
 
 	@include mq($from: big) {
-		border: none;
-		border-top: $border-width solid $color-tertiary;
-
+		
 		li{
-			border: none;
-			float: none;
-			width: auto;
-			display: block;
-			border-bottom: $border-width solid $color-tertiary;
+			border-bottom: none;
 		}
 
 		a{

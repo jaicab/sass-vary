@@ -49,13 +49,14 @@
 @include mq($from: big) {
 
 	.header{
-		position: fixed;
-		top: 0;
-		bottom: 0;
-		left: 0;
-		width: 17em;
+		background: darken($color-tertiary, 0%);
+		// position: fixed;
+		// top: 0;
+		// bottom: 0;
+		// left: 0;
+		// width: 17em;
 
 
-		border: $border-width solid $color-tertiary;
+		// border: $border-width solid $color-tertiary;
 	}
 }
