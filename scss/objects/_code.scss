@@ -42,10 +42,24 @@
 	background: $color-primary;
 }
 
+@include mq($from: medium) {
+	.code{
+		border-width: $border-width;
+	}
+	.code__panel{
+		&:before{
+			border-width: $border-width;
+		}
+
+		& + & {
+			border-width: $border-width;
+		}
+	}
+}
+
 @include mq($from: big) {
 	.code{
 		overflow: hidden;
-		border-width: $border-width;
 		max-width: 70em;
 		margin: 0 auto;
 	}
@@ -53,16 +67,16 @@
 		float: left;
 		width: 50%;
 		//min-height: 20em;
-		overflow-y: auto;
 
 		&:before{
-			border-width: $border-width;
 			font-size: .9em;
 		}
 
+		
 		& + & {
 			border-top: none;
 			border-left: $border-width solid $color-tertiary;
 		}
+
 	}
 }
