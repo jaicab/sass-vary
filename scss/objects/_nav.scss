@@ -16,6 +16,10 @@
 	    font-size: 1em;
 	    text-transform: lowercase;
 	    //background: $color-secondary;
+
+	    &.active{
+	    	background: $color-secondary;
+	    }
 	}
 
 	li{
