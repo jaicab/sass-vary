@@ -1,0 +1,66 @@
+
+.code{
+	border: $border-width/2 solid $color-tertiary;
+}
+
+.code__panel{
+	position: relative;
+
+	&:before{
+		content: 'CSS';
+		color: $color-tertiary;
+		background: $color-secondary;
+		display: inline-block;
+		padding: .5em .6em;
+		font-size: .8em;
+		float: right;
+		position: absolute;
+		top: 0;
+		right: 0;
+
+		border: $border-width/2 solid $color-tertiary;
+		border-top: none;
+		border-right: none;
+	}
+
+	& + & {
+		border-top: $border-width/2 solid $color-tertiary;
+	}
+}
+
+.code__scss{
+	background: $color-secondary;
+
+	&:before{
+		content: 'SCSS';
+		background: $color-primary;
+	}
+}
+.code__css{
+	background: $color-primary;
+}
+
+@include mq($from: big) {
+	.code{
+		overflow: hidden;
+		border-width: $border-width;
+		max-width: 70em;
+		margin: 0 auto;
+	}
+	.code__panel{
+		float: left;
+		width: 50%;
+		min-height: 20em;
+		overflow-y: auto;
+
+		&:before{
+			border-width: $border-width;
+			font-size: .9em;
+		}
+
+		& + & {
+			border-top: none;
+			border-left: $border-width solid $color-tertiary;
+		}
+	}
+}
