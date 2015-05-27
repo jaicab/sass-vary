@@ -69,14 +69,14 @@
 
 	@include mq($from: big) {
 		border: none;
-		border-top: $border-width/4 solid $color-tertiary;
+		border-top: $border-width solid $color-tertiary;
 
 		li{
 			border: none;
 			float: none;
 			width: auto;
 			display: block;
-			border-bottom: $border-width/4 solid $color-tertiary;
+			border-bottom: $border-width solid $color-tertiary;
 		}
 
 		a{
