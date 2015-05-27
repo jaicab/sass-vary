@@ -49,21 +49,41 @@
 
 		<div class="code">
 			<div class="code__panel code__scss"><pre>
-.test{
+$vary-map: (
+  user: (
+    'color-primary': #333,
+    'color-secondary': #069,
+    'border': 1px solid #ff0
+  ),
+  admin: (
+    'color-primary': #f0f,
+    'color-secondary': #000,
+    'border': 10px solid red
+  )
+);
+
+.foo{
 	color: #fff;
 
 	@include vary{
 		background: vary-get('color-primary');
+		border: vary-get('border');
 	}
 }
 			</pre></div>
 			<div class="code__panel code__css"><pre>
-.test{
+.foo{
 	color: #fff;	
 }
 
-.is-user .test{
-	
+.is-user .foo{
+	background: #069;
+	border: 1px solid #ff0;
+}
+
+.is-user .foo{
+	background: #f0f;
+	border: 10px solid red;
 }
 			</pre></div>
 		</div>
