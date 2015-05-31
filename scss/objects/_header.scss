@@ -3,7 +3,6 @@
 
 .header{
 	@extend %clearfix;	
-	background: $color-primary;
 }
 
 .nav-toggle-menu{
@@ -22,6 +21,7 @@
 .logo{
 	display: block;
 	text-align: center;
+	background: $color-primary;
 }
 
 
@@ -34,22 +34,15 @@
 
 
 @include mq($from: medium) {	
-
-	.header{
-		background: $color-primary;
-	}
-
 	.logo{			
-		background: $color-primary;
 		border-width: .5rem;
 	}
 
 }
 
-@include mq($from: big) {
+@include mq($from: bigish) {
 
 	.header{
-		background: darken($color-tertiary, 0%);
 		// position: fixed;
 		// top: 0;
 		// bottom: 0;

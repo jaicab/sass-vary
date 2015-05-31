@@ -1,4 +1,9 @@
 
+@include mq($until: wide) {
+	.wrapper{
+		width: auto;
+	}
+}
 
 main{
 	.wrapper{

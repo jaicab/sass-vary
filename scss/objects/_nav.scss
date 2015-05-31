@@ -12,10 +12,10 @@
 	a{
 		display: block;
 		color: $color-tertiary;
-	    padding: .25em .45em;
+	    padding: .35em .45em;
 	    font-size: 1em;
 	    text-transform: lowercase;
-	    //background: $color-secondary;
+	    background: $color-primary;
 
 	    &.active{
 	    	background: $color-secondary;
@@ -24,7 +24,7 @@
 
 	li{
 		border: .1em solid $color-tertiary;
-		margin: .25em .1em;
+		margin: .35em .1em;
 		display: inline-block;
 	}
 
@@ -42,7 +42,6 @@
 
 		a{
 			padding: .6em .05em;
-			background: $color-primary;
 		}
 
 		@include mq($until: medium) {	
@@ -73,14 +72,11 @@
 	}
 
 	@include mq($from: big) {
-		
-		li{
-			//border-bottom: none;
-		}
 
 		a{
 			padding: 1.5vh;
 		}
+
 	}
 }
 
