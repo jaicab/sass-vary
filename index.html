@@ -49,7 +49,8 @@
 
 		<div class="code">
 			<div class="code__caption">Body class example</div>
-			<div class="code__panel code__scss"><pre>
+			<div class="code__panel code__scss">
+<pre>
 $vary-map: (
   user: (
     'color-primary': blue,
@@ -69,8 +70,10 @@ $vary-map: (
 		border: vary-get('border');
 	}
 }
-			</pre></div>
-			<div class="code__panel code__css"><pre>
+</pre>
+			</div>
+			<div class="code__panel code__css">
+<pre>
 .foo{
 	background: red;	
 }
@@ -84,7 +87,8 @@ $vary-map: (
 	background: pink;
 	border: 10px solid red;
 }
-			</pre></div>
+</pre>
+			</div>
 		</div>
 
 		<div class="wrapper">
@@ -94,7 +98,10 @@ $vary-map: (
 		</div>
 
 		<div class="wrapper">
-			<h2>I want more</h2>
+			<h2>What else?</h2>
+			<p>vary is very powerful and full of possibilities. Here's a summary of what it can do.</p>
+
+			<h3>Creation modes</h3>
 			<p>vary has <b>4 creation modes</b> at the moment:</p>
 			<ul>
 				<li><b>Body/parent class</b>: The most common way to approach theming is using a body/parent class.</li>
@@ -105,7 +112,18 @@ $vary-map: (
 
 			<p>Check out the <a href="/demos/">demos page</a> to see the creation modes in action.</p>
 
-			<h2>How do I get it?</h2>
+			<h3>Flexibility</h3>
+			<p>It's nice that vary goes through every entity for you, but on some cases you may want something different for specific entities only or to exclude some from the list. Maybe you even have multiple maps to loop through.</p>
+			<p>Well, vary has your back. On the current version of vary you have support for:</p>
+			<ul>
+				<li><b>Targeted entities</b>: Using the <code>$for</code> parameter you can make vary go through <i>some</i> of the entities from them map, not all of them.</li>
+				<li><b>Excluded entities</b>: The reversed version of the targeted ones. Using the <code>$not</code> parameter, you can exclude entities so vary doesn't loop through them.</li>
+				<li><b>Multiple maps</b>: By default, vary will loop through the entities in <code>$vary-map</code>. But if you have multiple maps of the same kind, you can set any map using the <code>$loop</code> parameter and vary will loop through it instead of the default one.</li>
+			</ul>
+
+			<p>It also allows you to have a centralised set of variables that can be accessed using the <code>vary-get</code> function. Check out <a href="/docs/">the docs</a> to know more about the functions and mixins included.</p>
+
+			<h2>How to get it</h2>
 			<p>vary is licensed under the <a href="http://opensource.org/licenses/MIT" rel="external">MIT license</a> and totally available <a href="https://github.com/jaicab/sass-vary/" rel="external">on GitHub</a> and it is currently mantained by me, <a href="http://jaicab.com" rel="external">Jaime Caballero</a>.</p>
 
 			<p>To get a copy you can fetch it directly <a href="https://github.com/jaicab/sass-vary/" rel="external">from GitHub</a> or use <a href="http://bower.io" rel="external">Bower</a>:</p>
@@ -113,7 +131,7 @@ $vary-map: (
 			
 			<p>Once you get it, import it into your project and put these into your variables file.</p>
 
-			<pre>
+<pre>
 $vary-libsass: true;
 
 $vary-map: (
@@ -126,7 +144,7 @@ $vary-map: (
     'border': '10px solid black'
   )
 );
-			</pre>
+</pre>
 
 			<p>Set up your <code>$vary-map</code> with the entities and colours relative to your project and you are ready to go!</p>
 

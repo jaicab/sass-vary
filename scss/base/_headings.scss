@@ -25,6 +25,11 @@ h2{
 	text-rendering: optimizeLegibility;
 }
 
+h3{
+	margin: 0;
+	font-size: 1.2em;
+}
+
 .intro{
 	font-family: $font;
 	margin: 1.5em -.5em;
@@ -40,7 +45,11 @@ h2{
 	}
 
 	h2{
-		font-size: 1.8em;
+		font-size: 1.9em;
+	}
+
+	h3{
+		font-size: 1.25em;
 	}
 }
 
