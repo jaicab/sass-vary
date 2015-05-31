@@ -23,6 +23,16 @@ h1{
 h2{
 	font-size: 1.6em;
 	text-rendering: optimizeLegibility;
+	margin-top: 1em;
+
+	&:before{
+		content:'';
+		display: block;
+		//width: 80%;
+		height: .25rem;
+		margin: 0 auto 0;
+		background: $color-secondary;
+	}
 }
 
 h3{
@@ -46,6 +56,10 @@ h3{
 
 	h2{
 		font-size: 1.9em;
+
+		&:before{
+			height: .5rem;
+		}
 	}
 
 	h3{
