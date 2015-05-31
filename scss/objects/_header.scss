@@ -28,7 +28,7 @@
 @include mq($from: small) {
 	.logo{
 		border: .25rem solid $color-tertiary;
-		border-bottom: none;
+		border-top: none;
 	}
 }
 
