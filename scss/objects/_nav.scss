@@ -10,12 +10,18 @@
 	}
 
 	a{
+		border: none;
 		display: block;
 		color: $color-tertiary;
 	    padding: .35em .45em;
 	    font-size: 1em;
 	    text-transform: lowercase;
 	    background: $color-primary;
+		transition: .25s all;
+		
+	    @include hover {
+	    	background: darken($color-primary, 10%);
+	    }
 
 	    &.active{
 	    	background: $color-secondary;
@@ -65,6 +71,7 @@
 
 		a{
 			font-family: $font-secondary;
+			letter-spacing: .025em;
 			font-size: 1.4em;
 			padding: .5em;
 		}

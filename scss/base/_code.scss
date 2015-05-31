@@ -7,7 +7,9 @@ code{
 
 pre{
 	color: $color-tertiary;
-	margin: 0;
+	margin: 0 0 1em 0;
 	tab-size: 4;
 	font-size: .9em;
+	background: $color-secondary;
+	padding: 1em;
 }

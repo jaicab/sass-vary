@@ -2,7 +2,9 @@
 
 a{
 	text-decoration: none;
-	color: $color-link;
+	color: $color-secondary;
+	border-bottom: .1em solid $color-primary;
+
 
 	&:hover,
 	&:active,

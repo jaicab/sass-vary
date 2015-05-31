@@ -11,7 +11,7 @@
 	<link href='http://fonts.googleapis.com/css?family=Abril+Fatface' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="css/style.css">
 
-	<title>vary - Theming made easy | Sass mixin made by Jaime Caballero</title>
+	<title>vary - Sass theming made easy | Mixin by Jaime Caballero</title>
 </head>
 <body>
 	<header class="header" role="banner">
@@ -23,7 +23,7 @@
 					<li><a href="#" class="active">Home</a></li>
 					<li><a href="#">Demos</a></li>
 					<li><a href="#">Docs</a></li>
-					<li><a href="#">About</a></li>
+					<li><a href="https://github.com/jaicab/sass-vary/" rel="external">GitHub</a></li>
 				</ul>
 			</nav>
 
@@ -48,22 +48,23 @@
 		</div>
 
 		<div class="code">
+			<div class="code__caption">Body class example</div>
 			<div class="code__panel code__scss"><pre>
 $vary-map: (
   user: (
     'color-primary': blue,
-    'border': 1px solid #ff0
+    'border': '1px solid #ff0'
   ),
   admin: (
     'color-primary': pink,
-    'border': 10px solid black
+    'border': '10px solid black'
   )
 );
 
 .foo{
 	background: red;
 
-	@include vary {
+	@include vary($create: body) {
 		background: vary-get('color-primary');
 		border: vary-get('border');
 	}
@@ -88,17 +89,56 @@ $vary-map: (
 
 		<div class="wrapper">
 			<p>In order to relate the values with the entities, vary uses Sass maps. Build your <code>$vary-map</code> and you can start creating variations of any selector.</p>
-			<p>Withing the vary scope, you can request values like the primary color with <code>vary-get</code>. By default, vary will loop through the entities in the map and create a selector per entity, each with the corresponding primary color.</p>
+			<p>Withing the vary scope, you can request values like the primary color with <code>vary-get</code>. Then vary will loop through the entities in the map and create whatever has been specified for you (in this case a body class) per entity, each with the corresponding primary color and border.</p>
 			<p>Keeping the entity names in a single place across the codebase helps with consistency and scalability. If you ever need to create another variation, just add the values to the map and it will replicate accross the entire CSS.</p>
+		</div>
+
+		<div class="wrapper">
+			<h2>I want more</h2>
+			<p>vary has <b>4 creation modes</b> at the moment:</p>
+			<ul>
+				<li><b>Body/parent class</b>: The most common way to approach theming is using a body/parent class.</li>
+				<li><b>Body + HTML class</b>: If you need to apply the body class on a selector that contains an HTML class.</li>
+				<li><b>BEM modifier</b>: When differently styled modules need to be present on the same page, the most common approach is to create a modifier.</li>
+				<li><b>Custom</b>: A vary playground. You can create any kind of construction.</li>
+			</ul>
+
+			<p>Check out the <a href="/demos/">demos page</a> to see the creation modes in action.</p>
+
+			<h2>How do I get it?</h2>
+			<p>vary is licensed under the <a href="http://opensource.org/licenses/MIT" rel="external">MIT license</a> and totally available <a href="https://github.com/jaicab/sass-vary/" rel="external">on GitHub</a> and it is currently mantained by me, <a href="http://jaicab.com" rel="external">Jaime Caballero</a>.</p>
+
+			<p>To get a copy you can fetch it directly <a href="https://github.com/jaicab/sass-vary/" rel="external">from GitHub</a> or use <a href="http://bower.io" rel="external">Bower</a>:</p>
+			<pre>bower install sass-vary --save</pre>
+			
+			<p>Once you get it, import it into your project and put these into your variables file.</p>
+
+			<pre>
+$vary-libsass: true;
+
+$vary-map: (
+  user: (
+    'color-primary': blue,
+    'border': '1px solid #ff0'
+  ),
+  admin: (
+    'color-primary': pink,
+    'border': '10px solid black'
+  )
+);
+			</pre>
+
+			<p>Set up your <code>$vary-map</code> with the entities and colours relative to your project and you are ready to go!</p>
+
 		</div>
 	</main>
 
 	<footer class="footer" role="contentinfo">
 	
 		<div class="wrapper">
-			<div class="footer__text copyright">Licensed under the <a href="http://opensource.org/licenses/MIT">MIT license</a>.</div>
-			<div class="footer__text github">Check it out <a href="https://github.com/jaicab/sass-vary">on GitHub</a>.</div>
-			<div class="footer__text madeby">Built with love by <a href="http://jaicab.com" title="Frontend architect Jaime Caballero based in London">Jaime Caballero</a>.</div>
+			<div class="footer__text copyright">Licensed under the <a href="http://opensource.org/licenses/MIT" rel="external">MIT license</a>.</div>
+			<div class="footer__text github">Check it out <a href="https://github.com/jaicab/sass-vary/" rel="external">on GitHub</a>.</div>
+			<div class="footer__text madeby">Built with love by <a href="http://jaicab.com" title="Frontend architect Jaime Caballero based in London" rel="external">Jaime Caballero</a>.</div>
 		</div>
 	</footer>
 </body>

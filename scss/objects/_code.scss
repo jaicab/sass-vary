@@ -4,9 +4,22 @@
 	margin: 1em 0;
 }
 
+.code__caption{
+	font-size: .85em;
+	margin-bottom: .25rem;
+	font-family:Georgia, "Times New Roman", Times, serif;
+	font-style: italic;
+	font-weight: 300;
+}
+
 .code__panel{
 	position: relative;
 	padding: 1em 1em 0;
+
+	pre{
+		padding: 0;
+		background: none;
+	}
 
 	&:before{
 		content: 'CSS';
@@ -43,6 +56,10 @@
 }
 
 @include mq($from: medium) {
+	.code__caption{
+		margin-bottom: .5rem;
+	}
+
 	.code{
 		border-width: $border-width;
 	}
@@ -61,7 +78,7 @@
 	.code{
 		overflow: hidden;
 		max-width: 70em;
-		margin: 0 auto;
+		margin: 0 auto 1.5em;
 	}
 	.code__panel{
 		float: left;
