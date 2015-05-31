@@ -1,0 +1,38 @@
+
+@include mq($from: bigish) {
+		
+	.sidebyside{
+		border-left: $border-width solid $color-tertiary;
+		max-width: 70em;
+		margin: 0 auto;
+
+		.extra-space{
+			margin-top: $border-width !important;
+		}
+	}
+
+	.sidebyside__text{
+		width: 33.33% !important;
+		float: left;
+	}
+
+	.sidebyside__code{
+		width: 66.66% !important;
+		float: left;
+	}
+
+	.sidebyside__code{
+		border-left: $border-width solid $color-tertiary;
+
+		.code__panel{
+			float: none;
+			width: auto;
+
+			+ .code__panel{
+				border-left: none;
+				border-top: $border-width solid $color-tertiary;
+			}
+		}
+	}
+
+}

@@ -1,0 +1,7 @@
+.sassmeister-gist{
+	padding: $border-width/2;
+
+	@include mq($from: medium) {
+		padding: $border-width;
+	}	
+}

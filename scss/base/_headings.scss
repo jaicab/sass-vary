@@ -40,6 +40,19 @@ h3{
 	font-size: 1.2em;
 }
 
+.extra-space{
+	margin-top: 1em;
+
+	&:before{
+		content:'';
+		display: block;
+		//width: 80%;
+		height: .25rem;
+		margin: 0 auto 0;
+		background: $color-primary;
+	}
+}
+
 .intro{
 	font-family: $font;
 	margin: 1.5em -.5em;
@@ -65,6 +78,7 @@ h3{
 	h3{
 		font-size: 1.25em;
 	}
+
 }
 
 @include mq($from: mediumish) {
