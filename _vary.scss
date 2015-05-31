@@ -55,7 +55,7 @@
 
 /// Set to true if using libsass. Uses some extra CSS on HTML class scenario.
 ///
-/// @type {String}
+/// @type Bool
 $vary-libsass: true !default;
 
 
@@ -63,7 +63,7 @@ $vary-libsass: true !default;
 /// Body class prefix. 
 /// Will work as .#{$vary-default-bodyclass}foo
 ///
-/// @type {String}
+/// @type String
 $vary-default-bodyclass: 'is-' !default;
 
 
@@ -90,14 +90,14 @@ $vary-map: (
 
 /// Current _entity_ during the loop. Can be used in custom creation mode.
 ///
-/// @type {String}
+/// @type String
 $vary-loop-entity: '' !global;
 
 
 
 /// Current _map_ during the loop. Can be used in custom creation.
 ///
-/// @type {String}
+/// @type Map
 $vary-loop-map: $vary-map !global;
 
 
