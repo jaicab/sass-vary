@@ -3,6 +3,7 @@
 	.wrapper{
 		padding: 1.5em 0;
 		background: $color-secondary;
+		border: .25rem solid $color-tertiary;
 	}
 
 	margin-top: 2em;
@@ -22,14 +23,15 @@
 @include mq($from: small) {
 	.footer{
 		text-align: center;
-		border: $border-width/2 solid $color-tertiary;
 	}
 }
 
 @include mq($from: medium) {
 	.footer{
 		padding-bottom: 0;
-		border-width: $border-width;
+		.wrapper{
+			border-width: $border-width;
+		}
 	}
 }
 
