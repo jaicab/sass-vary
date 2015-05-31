@@ -495,7 +495,7 @@ $vary-loop-map: $vary-map !global;
   } @else {
     // Custom
     @each $entity in $entity-list {
-      @include vary-single-custom($entity, $htmlclass) {
+      @include vary-single-custom($entity) {
         @content;
       }
     }
