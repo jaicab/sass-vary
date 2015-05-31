@@ -3,47 +3,48 @@
 ////
 /// -------------------------------------------------------------------------------------
 ///
-///                         _vary.scss v1.0 - Consisten CSS variations
+///                       _vary.scss v1.0 - Consistent CSS theming
 ///
-///                                     jaicab.com/vary/
+///                                 jaicab.com/sass-vary/
 ///
 /// -------------------------------------------------------------------------------------
 ///
 /// List all your variations in your $vary-map.
-/// vary will loop through them and create the code for you, helping with consistency in a DRYer code.
+/// vary will loop through them and create the code for you, with a consistent and DRYer code.
 ///
 /// You can start using this library like so:
 ///
 ///   $vary-map: (
 ///      user: (
-///        'color-primary': #333,
-///        'border': "1px solid red",
+///        'color-primary': blue,
+///        'border': "1px solid #ff0",
 ///      ),
 ///      admin: (
-///        'color-primary': #f0f,
-///        'border': "10px dashed blue",
+///        'color-primary': pink,
+///        'border': "10px solid black",
 ///      )
 ///    );
 ///
 ///   .foo{
-///     font-size: .9em;
+///     background: red;
 ///       
-///     @include vary {
-///       color: vary-get('color-primary');
+///     @include vary($create: body) {
+///       background: vary-get('color-primary');
+///       border: vary-get('border');
 ///     }
 ///   }
 ///
 ///   // Compiles into
 ///   .foo{
-///     font-size: .9em;
+///     background: red;
 ///   }
 ///   .is-user .foo{
-///     color: #333;  
-///     border: 1px solid red;  
+///     color: blue;  
+///     border: 1px solid #ff0;  
 ///   }
 ///   .is-admin .foo{
-///     color: #f0f;  
-///     border: 10px dashed blue;  
+///     color: pink;  
+///     border: 10px solid red;  
 ///   }
 ///
 ///
@@ -52,29 +53,22 @@
 
 
 
-/// Temporary variable to contain the current class during the loop.
+/// Set to true if using libsass. Uses some extra CSS on HTML class scenario.
 ///
 /// @type {String}
-$vary-temp: '' !global;
+$vary-libsass: true !default;
 
-
-/// Default action for vary mixin. Possible values:
-/// - 'mod': BEM modifier (.foo--class)
-/// - 'body': Body class (.is-class .foo)
-///
-/// @type {String}
-$vary-default-action: 'body' !default;
 
 
 /// Body class prefix. 
-/// Will work as .#{$vary-bodyclass}foo
+/// Will work as .#{$vary-default-bodyclass}foo
 ///
 /// @type {String}
 $vary-default-bodyclass: 'is-' !default;
 
 
 
-/// List of variations
+/// List of variations.
 /// Should be put with your other variables, before the mixins.
 ///
 /// Set as many keys as you wish, will be used to keep consistency.
@@ -83,43 +77,53 @@ $vary-default-bodyclass: 'is-' !default;
 /// @type Map
 $vary-map: (
   user: (
-    'color-primary': #333,
-    'color-secondary': #069,
-    'color-tertiary': red,
-    'border-box': 1px solid #ff0
+    'color-primary': blue,
+    'border': '1px solid #ff0'
   ),
   admin: (
-    'color-primary': #f0f,
-    'color-secondary': #000,
-    'color-tertiary': red,
-    'border-box': 10px solid red
+    'color-primary': pink,
+    'border': '10px solid black'
   )
 ) !default;
 
 
 
-/// Gets a value from the $vary-list
+/// Current _entity_ during the loop. Can be used in custom creation mode.
+///
+/// @type {String}
+$vary-loop-entity: '' !global;
+
+
+
+/// Current _map_ during the loop. Can be used in custom creation.
+///
+/// @type {String}
+$vary-loop-map: $vary-map !global;
+
+
+
+/// Gets a value from a vary-like map using the current entity and map withing the vary scope.
 ///
 /// @param {String} $key - Name of the variable you want to get
-/// @param {String} $class - Name of the kind you want to access
+/// @param {String} $entity - Name of the entity you want to access
 ///
 /// @example scss
-///   vary-get("color-primary", "user");
+///   vary-get("color-primary", user);
 ///   // -> #333
 ///
-/// @returns {String} Value of key for that kind
-@function vary-get($key, $class: $vary-temp) {
+/// @returns {String} Value of key for that entity
+@function vary-get($key, $entity: $vary-loop-entity, $map: $vary-loop-map) {
   $ret: '';
 
-  @if map-has-key($vary-map, $class) {
-    $class-map: map-get($vary-map, $class);
-    @if map-has-key($class-map, $key) {
-      $ret: map-get($class-map, $key);
+  @if map-has-key($map, $entity) {
+    $entity-map: map-get($map, $entity);
+    @if map-has-key($entity-map, $key) {
+      $ret: unquote(map-get($entity-map, $key));
     } @else {
-      @error "The class '#{$class}' doesn't have a value for '#{$key}'.";
+      @error "The entity '#{$entity}' doesn't have a value for '#{$key}'.";
     }
   } @else {
-    @error "There is no '#{$class}' class in your variations list.";
+    @error "There is no '#{$entity}' entity in your variations list.";
   }
 
   @return $ret;
@@ -127,31 +131,33 @@ $vary-map: (
 
 
 
-/// Filters the keys provieded into a final list
+/// Filters the entities provieded into a final list
 ///
 /// @param {List} $included - List with the keys to use
 /// @param {List} $excluded - List with the keys NOT to use
+/// @param {Map} $map - Map to check keys against
 ///
 /// @example scss
-///   vary-filter(("color", "border", "thickness"), ("border"));
-///   // -> ("color", "thickness")
+///   vary-filter(color border thickness, border);
+///   // -> (color thickness)
 ///
-/// @returns {List} List of the keys to use without the ones excluded
-@function vary-filter($included, $excluded: ()) {
+/// @returns {List} List of the keys to use, available on the map, without the ones excluded
+@function vary-filter($included: (), $excluded: (), $map: $vary-loop-map) {
   $ret: ();
-
+  
   // If haven't specified anything, default to all
   @if $included == "all" {
-    $included: map-keys($vary-map);
+    $included: map-keys($map);
   }
 
   // Build the specified key list
   @each $key in $included {
+
     // If it's in our map
-    @if not map-has-key($vary-map, $key) {
-      @error $key;
-      //@error "There is no '#{$key}' class in your variations list.";
+    @if map-has-key($map, $key)==null {
+      @error "There is no '#{$key}' class in your variations list.";
     } 
+
     // But not excluded
     @elseif not index($excluded, $key) {
       // Add it to the final list
@@ -192,7 +198,7 @@ $vary-map: (
       // Each restant element - .htmlclass .bodyclass .otherselectors
       @for $i from 2 through length($selector) {
         // Add the other selectors
-        $with-bodyclass: append($with-bodyclass, nth($selector, $i));
+        $with-bodyclass: append($with-bodyclass, nth($selector, $i), space);
       }
     }
 
@@ -203,6 +209,75 @@ $vary-map: (
   @return $ret;
 }
 
+
+
+/// Creates variations with a .is-class body class. 
+/// It also places it after the HTML class given in the parent.
+///
+/// @param {String} $class - Body class key to use.
+///
+///   $vary-map: (
+///      user: (
+///        'color-primary': blue,
+///        'border': "1px solid #ff0",
+///      ),
+///      admin: (
+///        'color-primary': pink,
+///        'border': "10px solid black",
+///      )
+///    );
+///
+///   .foo{
+///     background: red;
+///       
+///     @include vary($create: htmlbody) {
+///       background: vary-get('color-primary');
+///       border: vary-get('border');
+///     }
+///   }
+///
+///   // Compiles into
+///   .js .foo{
+///     font-size: .9em;
+///   }
+///   .js .is-user .foo{
+///     color: blue;
+///     border: 1px solid #ff0;
+///   }
+///   .js .is-admin .foo{
+///     color: pink;
+///     border: 10px solid black;
+///   }
+///  
+@mixin vary-single-htmlbody($entity) {
+  // Update the global helper class
+  $vary-loop-entity: $entity !global;
+  $selector-list: ();
+
+  @if & {
+    $selector: &;
+    $bodyclass: ".#{$vary-default-bodyclass}#{$vary-loop-entity}";
+    
+    @if $vary-libsass == true {
+      @at-root{
+        html{
+          &#{vary-htmlclass($selector, $bodyclass)} {
+            @content;
+          }
+        }
+      }
+    } @else {
+      @at-root{
+        #{vary-htmlclass($selector, $bodyclass)} {
+          @content;
+        }
+      }
+    }
+  } @else {
+    @error "No parent found. I need the parent HTML class to place everything on its right place.";
+  }
+
+}
 
 
 /// Creates variations with a .is-class body class.
@@ -236,30 +311,20 @@ $vary-map: (
 ///     color: #333;  
 ///   }
 ///  
-@mixin vary-body($class, $html-class: false) {
+@mixin vary-single-body($entity, $htmlclass: false) {
   // Update the global helper class
-  $vary-temp: $class !global;
+  $vary-loop-entity: $entity !global;
   $selector-list: ();
 
   @if & {
-    @if $html-class == true {
-      $selector: &;
-      $bodyclass: ".#{$vary-default-bodyclass}#{$class}";
-      @at-root{
-        #{vary-htmlclass($selector, $bodyclass)} {
-          @content;
-        }
-      }
-    } @else {
-      @at-root{
-        .#{$vary-default-bodyclass}#{$class} & {
-          @content;
-        }
+    @at-root{
+      .#{$vary-default-bodyclass}#{$entity} & {
+        @content;
       }
     }
   } @else {
     @at-root{
-      .#{$vary-default-bodyclass}#{$class} {
+      .#{$vary-default-bodyclass}#{$entity} {
         @content;
       }
     }
@@ -300,17 +365,17 @@ $vary-map: (
 ///     color: #333;  
 ///   }
 ///   
-@mixin vary-mod($class) {
+@mixin vary-single-mod($entity) {
   // Update the global helper class
-  $vary-temp: $class !global;
+  $vary-loop-entity: $entity !global;
 
-  // Do we have a wrapping selector?
+  // Do we have a parent selector?
   @if not & {
     @error "You can't create a modifier without a base.";
   } @else {
 
     @at-root {
-      &--#{$class} {
+      &--#{$entity} {
         @content;
       }
     }
@@ -320,9 +385,9 @@ $vary-map: (
 
 
 
-/// Creates variations for $vary-map
+/// Doesn't create anything, it just gives you the right scope.
 ///
-/// @param {String} $class - Body class key to use.
+/// @param {String} $class - Modifier key to use.
 ///
 /// @example scss
 ///   $vary-map: (
@@ -338,7 +403,7 @@ $vary-map: (
 ///   .foo{
 ///     font-size: .9em;
 ///       
-///     @include vary {
+///     @include vary-mod("user") {
 ///       color: vary-get('color-primary');
 ///     }
 ///   }
@@ -347,28 +412,90 @@ $vary-map: (
 ///   .foo{
 ///     font-size: .9em;
 ///   }
-///   .is-user .foo{
+///   .foo--user{
 ///     color: #333;  
 ///   }
+///   
+@mixin vary-single-custom($entity) {
+  // Update the global helper class
+  $vary-loop-entity: $entity !global;
+  
+  @content;
+}
+
+
+
+/// Creates variations for $vary-map
+///
+/// @param {String} $create - What vary will create for you (body, htmlbody, mod, custom).
+/// @param {List} $for - List of entities to include
+/// @param {List} $not - Excluded list of entities
+/// @param {Map} $loop - Map to loop through
+///
+/// @example scss
+///   $vary-map: (
+///      user: (
+///        'color-primary': blue,
+///        'border': "1px solid #ff0",
+///      ),
+///      admin: (
+///        'color-primary': pink,
+///        'border': "10px solid black",
+///      )
+///    );
+///
+///   .foo{
+///     background: red;
+///       
+///     @include vary($create: body) {
+///       background: vary-get('color-primary');
+///       border: vary-get('border');
+///     }
+///   }
+///
+///   // Compiles into
+///   .foo{
+///     background: red;
+///   }
+///   .is-user .foo{
+///     color: blue;  
+///     border: 1px solid #ff0;  
+///   }
 ///   .is-admin .foo{
-///     color: #f0f;  
+///     color: pink;  
+///     border: 10px solid red;  
 ///   }
 ///   
-@mixin vary($action: $vary-default-action, $for: "all", $not: (), $html-class: false){
-  $variations: vary-filter($for, $not);
+@mixin vary($create, $for: "all", $not: (), $loop: $vary-map){
+  $vary-loop-map: $loop !global;
+  $entity-list: vary-filter($for, $not, $loop);
 
-  // Go through all the variations
-  @if $action == "body" {
-    // bodyclass
-    @each $class in $variations {
-      @include vary-body($class, $html-class) {
+  // Go through all the creation modes
+  @if $create == "body" {
+    // Body class
+    @each $entity in $entity-list {
+      @include vary-single-body($entity) {
+        @content;
+      }
+    }
+  } @elseif $create == "htmlbody" {
+    // Body class with html parent class
+    @each $entity in $entity-list {
+      @include vary-single-htmlbody($entity) {
+        @content;
+      }
+    }
+  } @elseif $create == "mod" {
+    // BEM modifier
+    @each $entity in $entity-list {
+      @include vary-single-mod($entity) {
         @content;
       }
     }
   } @else {
-    // BEM modifier
-    @each $class in $variations {
-      @include vary-mod($class) {
+    // Custom
+    @each $entity in $entity-list {
+      @include vary-single-custom($entity, $htmlclass) {
         @content;
       }
     }
