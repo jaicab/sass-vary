@@ -214,7 +214,7 @@ $vary-loop-map: $vary-map !global;
 /// Creates variations with a .is-class body class. 
 /// It also places it after the HTML class given in the parent.
 ///
-/// @param {String} $class - Body class key to use.
+/// @param {String} $entity - Entity key to use.
 ///
 ///   $vary-map: (
 ///      user: (
@@ -282,7 +282,7 @@ $vary-loop-map: $vary-map !global;
 
 /// Creates variations with a .is-class body class.
 ///
-/// @param {String} $class - Body class key to use.
+/// @param {String} $entity - Entity key to use.
 ///
 /// @example scss
 ///   $vary-map: (
@@ -311,7 +311,7 @@ $vary-loop-map: $vary-map !global;
 ///     color: #333;  
 ///   }
 ///  
-@mixin vary-single-body($entity, $htmlclass: false) {
+@mixin vary-single-body($entity) {
   // Update the global helper class
   $vary-loop-entity: $entity !global;
   $selector-list: ();
@@ -336,7 +336,7 @@ $vary-loop-map: $vary-map !global;
 
 /// Creates BEM modifiers for a wrapper element
 ///
-/// @param {String} $class - Modifier key to use.
+/// @param {String} $entity - Modifier key to use.
 ///
 /// @example scss
 ///   $vary-map: (
@@ -387,7 +387,7 @@ $vary-loop-map: $vary-map !global;
 
 /// Doesn't create anything, it just gives you the right scope.
 ///
-/// @param {String} $class - Modifier key to use.
+/// @param {String} $entity - Entity key to use.
 ///
 /// @example scss
 ///   $vary-map: (
