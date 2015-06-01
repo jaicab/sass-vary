@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="x-ua-compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<meta name="description" content="The vary mixin is the most flexible, scalable and modular Sass theming solution out there.">
+
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="vary - Sass theming made easy">
+	<meta name="twitter:description" content="The vary mixin is the most flexible, scalable and modular Sass theming solution out there.">
+	<meta name="twitter:creator" content="@jaicab_">
+
+	<meta property="og:title" content="vary - Sass theming made easy" />
+	<meta property="og:url" content="http://jaicab.com/sass-vary/" />
+
+	<link href='http://fonts.googleapis.com/css?family=Abril+Fatface' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="css/style.css">
+
+	<!-- DNS prefetching -->
+	<!--<link rel="dns-prefetch" href="http://cdn.sassmeister.com">-->
+	
+	<title>vary - Sass theming made easy | Mixin by Jaime Caballero</title>
+</head>
+<body>
+	<header class="header" role="banner">
+
+		<div class="wrapper">
+
+			<nav class="nav" role="navigation">
+				<ul>
+					<li><a href="./">Home</a></li>
+					<li><a href="./demos.html">Demos</a></li>
+					<li><a href="./docs.html" class="active">Docs</a></li>
+					<li><a href="https://github.com/jaicab/sass-vary/" rel="external">GitHub</a></li>
+				</ul>
+			</nav>
+
+			<a href="/" class="logo">
+				<span class="logo__vary">vary</span>
+				<span class="logo__sass">sass</span>
+			</a>
+			
+		</div>
+
+	</header>
+	
+	<main role="main">
+		<div class="wrapper">
+			<h2>Documentation</h2>
+			<p>vary is currently supported on <b>Sass 3.2+</b> and <b>libsass 3.2+</b>. Here is what you can find under the hood:</p>
+
+			<ul>
+				<li><a href="#variables">Variables</a></li>
+				<li><a href="#functions">Functions</a></li>
+				<li><a href="#mixins">Mixins</a></li>
+			</ul>
+
+			<p>All of these functions and mixins have been built to be used independently in case it was ever needed.<p>
+			<p>If you reckon there's a better way of achieving that, please <a href="https://github.com/jaicab/sass-vary/issues/new">open an issue</a> or <a href="https://github.com/jaicab/sass-vary/compare">send a pull request</a>.</p>
+
+		</div>
+
+
+		<div class="wrapper" id="variables">
+			<h3 class="extra-space">Variables</h3>
+			<p>To get started with vary you will only need to set up your <code>$vary-map</code> map properly, but there are some other options that you may find interesting.</p>
+
+			<h4>$vary-libsass</h4>
+			<p>Set to false if not using libsass. Uses some extra CSS on HTML class creation mode.</p>
+<pre>
+$vary-libsass: true !default;
+</pre>
+
+
+			<h4>$vary-default-bodyclass</h4>
+			<p>Body class prefix. Will work as .#{$vary-default-bodyclass}foo.</p>
+<pre>
+$vary-default-bodyclass: 'is-' !default;
+</pre>
+
+			<h4>$vary-map</h4>
+			<p>Map of entities. Should be defined with your other variables, before the mixins.</p>
+			<p>Set as many entities as you wish, will be used to keep consistency. The variables under each key should be consistent in order to loop over all the keys.</p>
+<pre>
+$vary-map: (
+  user: (
+    'color-primary': blue,
+    'border': '1px solid #ff0'
+  ),
+  admin: (
+    'color-primary': pink,
+    'border': '10px solid black'
+  )
+) !default;
+</pre>
+
+			<h4>$vary-loop-entity</h4>
+			<p>Current *entity* during the loop. To be used in custom creation mode.</p>
+<pre>
+$vary-loop-entity: '' !global;
+</pre>
+
+			<h4>$vary-loop-map</h4>
+			<p>Current _map_ during the loop. To be used in custom creation.</p>
+<pre>
+$vary-loop-map: $vary-map !global;
+</pre>
+		</div>
+
+
+
+		<div class="wrapper" id="functions">
+			<h3 class="extra-space">Functions</h3>
+			<p>Some of these functions could come in handy, but the one you may be especially interested in is <code>vary-get</code>, since it'll let you access values outside the vary scope.</p>
+
+			<h4>vary-get()</h4>
+			<p>Gets a value from a vary-like map using the current entity and map withing the vary scope (or not).</p>
+			<p>Takes the current entity and map within the vary scope.</p>
+			<pre>
+@function vary-get($key, $entity: $vary-loop-entity, $map: $vary-loop-map) {
+  $ret: '';
+
+  @if map-has-key($map, $entity) {
+    $entity-map: map-get($map, $entity);
+    @if map-has-key($entity-map, $key) {
+      $ret: unquote(map-get($entity-map, $key));
+    } @else {
+      @error "The entity '#{$entity}' doesn't have a value for '#{$key}'.";
+    }
+  } @else {
+    @error "There is no '#{$entity}' entity in your variations list.";
+  }
+
+  @return $ret;
+}
+</pre>
+		</div>
+
+
+		<div class="code">
+			<div class="code__caption">vary-get() example</div>
+			<div class="code__panel code__scss">
+<pre>
+$vary-map: (
+  user: (
+    'color-primary': blue,
+    'border': '1px solid #ff0'
+  ),
+  admin: (
+    'color-primary': pink,
+    'border': '10px solid black'
+  )
+);
+
+.foo{
+	background: vary-get('color-primary', admin);
+}
+</pre>
+			</div>
+			<div class="code__panel code__css">
+<pre>
+.foo{
+	background: pink;	
+}
+</pre>
+			</div>
+		</div>
+
+		<div class="wrapper">
+
+			<h4>vary-filter()</h4>
+			<p>Works out the list of entities to go through based on the map, the targeted and the excluded.</p>
+
+<pre>
+@function vary-filter($included: (), $excluded: (), $map: $vary-loop-map) {
+  $ret: ();
+  
+  // If haven't specified anything, default to all
+  @if $included == "all" {
+    $included: map-keys($map);
+  }
+
+  // Build the specified key list
+  @each $key in $included {
+
+    // If it's in our map
+    @if map-has-key($map, $key)==null {
+      @error "There is no '#{$key}' class in your variations list.";
+    } 
+
+    // But not excluded
+    @elseif not index($excluded, $key) {
+      // Add it to the final list
+      $ret: append($ret, $key, comma);
+    }
+  }
+
+  @return $ret;
+}
+</pre>
+		</div>
+
+		<div class="code">
+			<div class="code__caption">vary-filter() example</div>
+			<div class="code__panel code__scss">
+<pre>
+vary-filter(color border thickness, border);
+</pre>
+			</div>
+			<div class="code__panel code__css">
+<pre>
+// -> (color thickness)
+</pre>
+			</div>
+		</div>
+	
+
+		<div class="wrapper">
+
+			<h4>vary-htmlclass()</h4>
+			<p>Adds a body class between the html class and the rest of the selector.</p>
+<pre>
+@function vary-htmlclass($selector-list, $bodyclass) {
+  $ret: ();
+
+  // Go through each selector
+  @each $selector in $selector-list {
+    $with-bodyclass: ();
+
+    // Just html class - .htmlclass
+    $with-bodyclass: append($with-bodyclass, nth($selector, 1));
+
+    // Add body class - .htmlclass .bodyclass
+    $with-bodyclass: append($with-bodyclass, unquote($bodyclass), space);
+
+    // If more than one element
+    @if(length($selector)>1){
+      // Each restant element - .htmlclass .bodyclass .otherselectors
+      @for $i from 2 through length($selector) {
+        // Add the other selectors
+        $with-bodyclass: append($with-bodyclass, nth($selector, $i), space);
+      }
+    }
+
+    // Merge it all in the selector list
+    $ret: append($ret, $with-bodyclass, comma);
+  }
+
+  @return $ret;
+}
+			</pre>
+
+
+		</div>
+
+		<div class="code">
+			<div class="code__caption">vary-filter() example</div>
+			<div class="code__panel code__scss">
+<pre>
+vary-htmlclass(
+	(.js .foo, .csstransitions .element), 
+	".is-admin"
+);
+</pre>
+			</div>
+			<div class="code__panel code__css">
+<pre>
+// -> (
+	.js .is-admin .foo, 
+	.csstransitions .is-admin .element
+)
+</pre>
+			</div>
+		</div>
+
+	
+
+		<div class="wrapper" id="mixins">
+			<h3 class="extra-space">Mixins</h3>
+			<p>Each creation mode has a mixin that performs its dedicated action on a single entity. It is vary itself which will loop through the entities and call the required mixins.</p>
+
+			<h4>vary-single-htmlbody()</h4>
+			<p>Creates variations with a .is-class body class. It also places it after the HTML class given in the parent.</p>
+
+<pre>
+@mixin vary-single-htmlbody($entity) {
+  // Update the global helper class
+  $vary-loop-entity: $entity !global;
+  $selector-list: ();
+
+  @if & {
+    $selector: &;
+    $bodyclass: ".#{$vary-default-bodyclass}#{$vary-loop-entity}";
+    
+    @if $vary-libsass == true {
+      @at-root{
+        html{
+          &#{vary-htmlclass($selector, $bodyclass)} {
+            @content;
+          }
+        }
+      }
+    } @else {
+      @at-root{
+        #{vary-htmlclass($selector, $bodyclass)} {
+          @content;
+        }
+      }
+    }
+  } @else {
+    @error "No parent found. I need the parent HTML class to place everything on its right place.";
+  }
+}
+</pre>
+
+			<h4>vary-single-body()</h4>
+			<p>Creates variations with a .is-class body class.</p>
+
+<pre>
+@mixin vary-single-body($entity) {
+  // Update the global helper class
+  $vary-loop-entity: $entity !global;
+  $selector-list: ();
+
+  @if & {
+    @at-root{
+      .#{$vary-default-bodyclass}#{$entity} & {
+        @content;
+      }
+    }
+  } @else {
+    @at-root{
+      .#{$vary-default-bodyclass}#{$entity} {
+        @content;
+      }
+    }
+  }
+
+}
+</pre>
+
+			<h4>vary-single-mod()</h4>
+			<p>Creates BEM modifiers for a wrapper element</p>
+
+<pre>
+@mixin vary-single-mod($entity) {
+  // Update the global helper class
+  $vary-loop-entity: $entity !global;
+
+  // Do we have a parent selector?
+  @if not & {
+    @error "You can't create a modifier without a base.";
+  } @else {
+
+    @at-root {
+      &--#{$entity} {
+        @content;
+      }
+    }
+  
+  }
+}
+</pre>
+
+
+			<h4>vary-single-body()</h4>
+			<p>Doesn't create anything, it just gives you the right scope.</p>
+
+<pre>
+@mixin vary-single-custom($entity) {
+  // Update the global helper class
+  $vary-loop-entity: $entity !global;
+  
+  @content;
+}
+</pre>
+
+			<h4>vary()</h4>
+			<p>Creates variations for $vary-map.</p>
+
+<pre>
+@mixin vary($create, $for: "all", $not: (), $loop: $vary-map){
+  $vary-loop-map: $loop !global;
+  $entity-list: vary-filter($for, $not, $loop);
+
+  // Go through all the creation modes
+  @if $create == "body" {
+    // Body class
+    @each $entity in $entity-list {
+      @include vary-single-body($entity) {
+        @content;
+      }
+    }
+  } @elseif $create == "htmlbody" {
+    // Body class with html parent class
+    @each $entity in $entity-list {
+      @include vary-single-htmlbody($entity) {
+        @content;
+      }
+    }
+  } @elseif $create == "mod" {
+    // BEM modifier
+    @each $entity in $entity-list {
+      @include vary-single-mod($entity) {
+        @content;
+      }
+    }
+  } @else {
+    // Custom
+    @each $entity in $entity-list {
+      @include vary-single-custom($entity) {
+        @content;
+      }
+    }
+  }
+}
+</pre>
+		</div>
+
+
+
+	</main>
+
+	<footer class="footer" role="contentinfo">
+	
+		<div class="wrapper">
+			<div class="footer__text copyright">Licensed under the <a href="http://opensource.org/licenses/MIT" rel="external">MIT license</a>.</div>
+			<div class="footer__text github">Check it out <a href="https://github.com/jaicab/sass-vary/" rel="external">on GitHub</a>.</div>
+			<div class="footer__text madeby">Built with love by <a href="http://jaicab.com" title="Frontend architect Jaime Caballero based in London" rel="external">Jaime Caballero</a>.</div>
+		</div>
+	</footer>
+</body>
+</html>
+
+
+<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+<!--<script>
+    (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+    function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+    e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+    e.src='//www.google-analytics.com/analytics.js';
+    r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+    ga('create','UA-XXXXX-X','auto');ga('send','pageview');
+</script>-->

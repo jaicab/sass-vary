@@ -60,6 +60,10 @@ $vary-map: (
   admin: (
     'color-primary': pink,
     'border': '10px solid black'
+  ),
+  superadmin: (
+	'color-primary': black,
+	'border': '.1em dashed red'
   )
 );
 </pre>
@@ -71,14 +75,13 @@ $vary-map: (
 
 		<div class="wrapper">
 			<h2 class="extra-space">Creation modes</h2>
-			<p>To set a creation mode, use the <code>$create</code> parameter on vary.</p>
-			<p>There are <b>4 creation modes</b> available at the moment, including a custom one. If you see yourself using the same custom pattern a lot, please <a href="https://github.com/jaicab/sass-vary/issues/new">open an issue</a> or <a href="https://github.com/jaicab/sass-vary/compare">send a pull request.</a></p>
+			<p>To set a creation mode, use the <code>$create</code> parameter on vary. There are <b>4 creation modes</b> available at the moment, including a custom one.</p>
 		</div>
 
 		<div class="sidebyside-list">
 			<div class="sidebyside">
 				<div class="sidebyside__text wrapper">
-					<h3 class="extra-space">Body class</h3>
+					<h3>Body class</h3>
 					<p>The most common way to approach CSS theming is using a body class. By setting the <code>$create</code> parameter to <b>body</b>, we are telling vary to create body classes for us.</p>
 					<p>The body class will be built based on a prefix and the current entity in the loop. By default, <code>is-</code> will be used as the prefix, so the class would be <code>.is-entity</code>.</p>
 					<p>If you want to change the prefix you can do so by setting <code>$vary-default-bodyclass</code>.</p>
@@ -114,6 +117,11 @@ $vary-map: (
 	background: pink;
 	border: 10px solid red;
 }
+
+.is-superadmin .foo .example{
+	background: black;
+	border: .1em dashed red;
+}
 </pre>
 					</div>
 				</div>
@@ -122,11 +130,10 @@ $vary-map: (
 
 			<div class="sidebyside">
 				<div class="sidebyside__text wrapper">
-					<h3 class="extra-space">Body with HTML class wrapper</h3>
-					<p>If you need to apply the body class on a selector that contains an HTML class.</p>
-					<p>The body class will be built based on a prefix and the current entity in the loop. By default, <code>is-</code> will be used as the prefix, so the class would be <code>.is-entity</code>.</p>
-					<p>If you want to change the prefix you can do so by setting <code>$vary-default-bodyclass</code>.</p>
-					<p>The body class will always be placed outside the entire selector. If an HTML class is wrapping the selector, you will need to use the body with HTML class wrapper (see next creation mode).</p>
+					<h3>Body with HTML class wrapper</h3>
+					<p>If you need to apply the body class on a selector that contains an HTML class while following the same functionality as the body class mode, set the <code>$create</code> parameter to <b>htmlbody</b>.</p>
+					<p>Using the <code>vary-htmlclass</code> function, vary builds a selector formed by the HTML class, then the body class and then the rest of the selector.</p>
+					<p>The HTML class will always be considered the first class in the selector. In this example, <code>.js</code>.</p>
 				</div>
 
 				<div class="sidebyside__code code">
@@ -138,7 +145,6 @@ $vary-map: (
 
 	@include vary($create: htmlbody) {
 		background: vary-get('color-primary');
-		border: vary-get('border');
 	}
 }
 </pre>
@@ -151,48 +157,297 @@ $vary-map: (
 
 .js .is-user .foo{
 	background: blue;
-	border: 1px solid #ff0;
 }
 
 .js .is-admin .foo{
 	background: pink;
+}
+
+.js .is-superadmin .foo{
+	background: black;
+}
+</pre>
+					</div>
+				</div>	
+			</div>
+
+			<div class="sidebyside">
+				<div class="sidebyside__text wrapper">
+					<h3>BEM modifier</h3>
+					<p>When differently styled modules need to be present on the same page, the most common approach is to create a modifier.</p>
+
+					<p>To define the modifier, you will need the block of which vary will create the modifiers. For code quality reasons, the BEM modifier is placed at the same scope as the element.</p>
+				</div>
+
+				<div class="sidebyside__code code">
+					<div class="code__caption">BEM modifier example</div>
+					<div class="code__panel code__scss">
+<pre>
+.parent .foo{
+	background: red;
+
+	@include vary($create: mod) {
+		background: vary-get('color-primary');
+		border: vary-get('border');
+	}
+}
+</pre>
+					</div>
+					<div class="code__panel code__css">
+<pre>
+.parent .foo{
+	background: red;	
+}
+
+.parent .foo--user{
+	background: blue;
+	border: 1px solid #ff0;
+}
+
+.parent .foo--admin{
+	background: pink;
 	border: 10px solid red;
+}
+
+.parent .foo--superadmin{
+	background: black;
+	border: .1em dashed red;
+}
+</pre>
+					</div>
+				</div>	
+			</div>
+
+			<div class="sidebyside">
+				<div class="sidebyside__text wrapper">
+					<h3>Custom</h3>
+					<p>A vary playground. Feel free to create any kind of construction.</p>
+
+					<p>Keep in mind these two variables:</p>
+					<ul>
+						<li><code>$vary-loop-entity</code>: Contains the value of the current entity on the loop (e.g. user, admin).</li>
+						<li><code>$vary-loop-map</code>: Contains the map that vary is looping through (e.g. <code>$vary-map</code>).</li>
+					</ul>
+
+					<p>If you see yourself using the same custom pattern a lot, please <a href="https://github.com/jaicab/sass-vary/issues/new">open an issue</a> or <a href="https://github.com/jaicab/sass-vary/compare">send a pull request</a> and I'll include it as a mode.</p>
+				</div>
+
+				<div class="sidebyside__code code">
+					<div class="code__caption">Body class with HTML class wrapper example</div>
+					<div class="code__panel code__scss">
+<pre>
+@include vary($create: custom) {
+	@at-root{
+		.#{$vary-loop-entity}-custom {
+			background: vary-get('color-primary');
+			border: vary-get('border');
+		}
+	}
+}
+</pre>
+					</div>
+					<div class="code__panel code__css">
+<pre>
+.user{
+	background: blue;
+	border: 1px solid #ff0;
+}
+
+.admin{
+	background: pink;
+	border: 10px solid red;
+}
+
+.superadmin{
+	background: black;
+	border: .1em dashed red;
 }
 </pre>
 					</div>
 				</div>	
 			</div>
 		</div>
+	
 
 
-		<div class="wrapper">
-			<h3 class="extra-space">BEM modifier</h3>
-			<p>When differently styled modules need to be present on the same page, the most common approach is to create a modifier.</p>
-		</div>	
 
-		<div class="wrapper">
-			<h3 class="extra-space">Custom</h3>
-			<p>A vary playground. You can create any kind of construction.</p>
-		</div>
 
 
 		<div class="wrapper">
 			<h2>Flexibility</h2>
 			<p>vary is highly customizable, that's why it has some other options besides the creation mode. Let's imagine different scenarios where you may need some flexibility.</p>
-			
-			<h3>Targeting</h3>
-			<p>Using the <code>$for</code> parameter you can make vary go through <i>some</i> of the entities from them map, not all of them.</p>
+		</div>
+
+		<div class="sidebyside-list">
+			<div class="sidebyside">
+				<div class="sidebyside__text wrapper">
+					<h3>Targeting</h3>
+					<p>Using the <code>$for</code> parameter you can make vary go through <i>some</i> of the entities from them map, not all of them.</p>
+					<p>If any of the entities given are not on the map, vary will throw an error. The rest of the entities will be ignored.</p>
+					<p>If you need to set this behaviour for these entities but a different one for the rest of them, you need to exclude them (see next).</p>
+				</div>
+
+				<div class="sidebyside__code code">
+					<div class="code__caption">Targeted entities example - <a target="_blank" rel="external" href="http://sassmeister.com/gist/c92ccceb6ff35effa9ac">See on SassMeister</a></div>
+					<div class="code__panel code__scss">
+<pre>
+.foo .example{
+	background: red;
+
+	@include vary($create: body, $for: user admin) {
+		background: vary-get('color-primary');
+		border: vary-get('border');
+	}
+}
+</pre>
+					</div>
+					<div class="code__panel code__css">
+<pre>
+.foo .example{
+	background: red;	
+}
+
+.is-user .foo .example{
+	background: blue;
+	border: 1px solid #ff0;
+}
+
+.is-admin .foo .example{
+	background: pink;
+	border: 10px solid red;
+}
+</pre>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="sidebyside">
+				<div class="sidebyside__text wrapper">
+					<h3>Excluding</h3>
+					<p>The reversed version of the targeted ones. Using the <code>$not</code> parameter, you can exclude entities so vary doesn't loop through them.</p>
+					<p>vary will loop through every entity but the ones listed in the <code>$not</code> list, so a combination of one vary looping throught the targeted ones and then another without them will cover every single entity in the map.</p>
+
+					<p>In this example, the same result could have been achieved by using the <code>$for</code> parameter with a <code>superadmin</code> value, but if new entities were added to the map, they would not be covered.</p>
+				</div>
+
+				<div class="sidebyside__code code">
+					<div class="code__caption">Excluded entities example</div>
+					<div class="code__panel code__scss">
+<pre>
+.foo .example{
+	background: red;
+
+	@include vary($create: body, $for: user admin) {
+		background: vary-get('color-primary');
+		border: vary-get('border');
+	}
+
+	@include vary($create: mod, $not: user admin) {
+		background: vary-get('color-primary');
+		border: vary-get('border');
+	}
+}
+</pre>
+					</div>
+					<div class="code__panel code__css">
+<pre>
+.foo .example{
+	background: red;	
+}
+
+.is-user .foo .example{
+	background: blue;
+	border: 1px solid #ff0;
+}
+
+.is-admin .foo .example{
+	background: pink;
+	border: 10px solid red;
+}
+
+.foo .example--superadmin{
+	background: black;
+	border: .1em dashed red;
+}
+</pre>
+					</div>
+				</div>	
+			</div>
+
+			<div class="sidebyside">
+				<div class="sidebyside__text wrapper">
+					<h3>Multiple maps</h3>
+					<p>By default, vary will loop through the entities in the <code>$vary-map</code> map.</p>
+					<p>But if you have multiple maps with the required structure (entity, list of values), you can set any map using the <code>$loop</code> parameter and vary will loop through it instead of the default one.</p>
+				</div>
+
+				<div class="sidebyside__code code">
+					<div class="code__caption">Multiple map support example</div>
+					<div class="code__panel code__scss">
+<pre>
+$stages: (
+	kid: (
+		'color': blue
+	),
+	teen: (
+		'color': pink
+	),
+	adult: (
+		'color': green
+	),
+	elder: (
+		'color': grey
+	)
+);
+
+.foo{
+	background: red;
+
+	@include vary($create: mod, $loop: $stages) {
+		background: vary-get('color');
+
+		&amp;:before{
+			content: '#{$vary-loop-entity}';
+		}
+	}
+}
+</pre>
+					</div>
+					<div class="code__panel code__css">
+<pre>
+.foo--kid{ color: blue; }
+.foo--kid:before{
+	content: 'kid';
+}
+
+.foo--teen{ color: pink; }
+.foo--teen:before{
+	content: 'teen';
+}
+
+.foo--adult{ color: green; }
+.foo--adult:before{
+	content: 'adult';
+}
+
+.foo--elder{ color: grey; }
+.foo--elder:before{
+	content: 'elder';
+}
+</pre>
+					</div>
+				</div>	
+			</div>
+
 		</div>
 
 		<div class="wrapper">
-			<h3 class="extra-space">Excluding</h3>
-			<p>The reversed version of the targeted ones. Using the <code>$not</code> parameter, you can exclude entities so vary doesn't loop through them.</p>
+			<p>In case you didn't notice, you can combine all this flexibility with any creation mode. So go nuts! Don't forget to <a href="https://github.com/jaicab/sass-vary/issues/new">open an issue</a> or <a href="https://github.com/jaicab/sass-vary/compare">send a pull request</a> if you find something odd.</p>
+			<p>vary uses some internal functions that you may find useful too. Take a look at <a href="./docs.html">the docs</a>!</p>
 		</div>
 
-		<div class="wrapper">
-			<h3 class="extra-space">Multiple maps</h3>
-			<p>By default, vary will loop through the entities in <code>$vary-map</code>. But if you have multiple maps of the same kind, you can set any map using the <code>$loop</code> parameter and vary will loop through it instead of the default one.</p>
-		</div>
+
 
 	</main>
 

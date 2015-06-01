@@ -5,9 +5,6 @@
 .sidebyside{
 	margin: 2em auto 0;
 
-	+ .sidebyside{
-		margin-top: 3em;
-	}
 }
 
 .sidebyside__text{
@@ -39,13 +36,23 @@
 		&:before{
 			margin: .2rem 1rem .25rem 0;
 			font-size: 2em;
+			font-family: $font-secondary;
+			padding: .5em 0;
 		}
 	}
+
+	.sidebyside-list{
+		margin-bottom: 3em;
+	}
+
 
 }
 	
 @include mq($from: bigish) {
 
+	.sidebyside-list{
+		margin-bottom: 5em;
+	}
 
 	.sidebyside{
 		border-left: $border-width solid $color-tertiary;
@@ -63,7 +70,7 @@
 		padding-right: 2em;
 
 		&:before{
-			margin: 1.5rem 1rem 1.5rem 0;
+			margin: 1.5rem 1rem 1.5em 0;
 			font-size: 1.5em;
 			float: none;
 		}
