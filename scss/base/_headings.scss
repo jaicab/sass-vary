@@ -43,14 +43,14 @@ h3{
 .extra-space{
 	margin-top: 1em;
 
-	&:before{
-		content:'';
-		display: block;
-		//width: 80%;
-		height: .25rem;
-		margin: 0 auto 0;
-		background: $color-primary;
-	}
+	// &:before{
+	// 	content:'';
+	// 	display: block;
+	// 	//width: 80%;
+	// 	height: .25rem;
+	// 	margin: 0 auto 0;
+	// 	background: $color-primary;
+	// }
 }
 
 .intro{
@@ -91,6 +91,7 @@ h3{
 
 @include mq($from: big) {
 	.intro{
+		font-size: 2.1em;
 		margin: 1em -1em 1.5em -1em;
 	}
 }

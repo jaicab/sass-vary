@@ -1,10 +1,56 @@
+.sidebyside-list{
+	counter-reset: sidebyside;
+}
 
+.sidebyside{
+	margin: 1em auto 0;
+
+	+ .sidebyside{
+		margin-top: 3em;
+	}
+}
+
+.sidebyside__text{
+
+	&:before{
+		counter-increment: sidebyside;
+		content: counter(sidebyside);
+		display: inline-block;
+		float: left;
+		width: auto;
+		background: $color-primary;
+		margin: .15rem .5rem .25rem 0;
+		width: 2em;
+		text-align: center;
+		color: $color-tertiary;
+		padding: .5em 0 .4em 0;
+		line-height: 1;
+		//font-family: $font-secondary;
+		font-weight: 800;
+		font-size: 1.25em;
+	}
+}
+
+
+@include mq($from: medium) {
+
+	.sidebyside__text{
+
+		&:before{
+			margin: .2rem 1rem .25rem 0;
+			font-size: 2em;
+		}
+	}
+
+}
+	
 @include mq($from: bigish) {
-		
+
+
 	.sidebyside{
 		border-left: $border-width solid $color-tertiary;
 		max-width: 70em;
-		margin: 0 auto;
+		overflow: auto;
 
 		.extra-space{
 			margin-top: $border-width !important;
@@ -12,8 +58,15 @@
 	}
 
 	.sidebyside__text{
-		width: 33.33% !important;
+		width: 40% !important;
 		float: left;
+		padding-right: 2em;
+
+		&:before{
+			margin: 1.5rem 1rem 1.5rem 0;
+			font-size: 1.5em;
+			float: none;
+		}
 
 		p{
 			text-align: justify;
@@ -21,7 +74,7 @@
 	}
 
 	.sidebyside__code{
-		width: 66.66% !important;
+		width: 60% !important;
 		float: left;
 	}
 

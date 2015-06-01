@@ -70,22 +70,23 @@ $vary-map: (
 		</div>
 
 		<div class="wrapper">
-			<h2>Creation modes</h2>
+			<h2 class="extra-space">Creation modes</h2>
 			<p>vary has <b>4 creation modes</b> at the moment, including a custom one. If you see yourself using the same custom pattern a lot, please <a href="https://github.com/jaicab/sass-vary/issues/new">open an issue</a> or <a href="https://github.com/jaicab/sass-vary/compare">send a pull request.</a></p>
 		</div>
 
-		<div class="sidebyside">
-			<div class="sidebyside__text wrapper">
-				<h3 class="extra-space">Body class</h3>
-				<p>The most common way to approach CSS theming is using a body class. By setting the <code>$create</code> parameter to <b>body</b>, we are telling vary to create body classes for us.</p>
-				<p>The body class will be built based on a prefix and the current entity in the loop. By default, <code>is-</code> will be used as the prefix, so the class would be <code>.is-entity</code>.</p>
-				<p>If you want to change the prefix you can do so by setting <code>$vary-default-bodyclass</code>.</p>
-				<p>The body class will always be placed outside the entire selector. If an HTML class is wrapping the selector, you will need to use the body with HTML class wrapper (see next creation mode).</p>
-			</div>
+		<div class="sidebyside-list">
+			<div class="sidebyside">
+				<div class="sidebyside__text wrapper">
+					<h3 class="extra-space">Body class</h3>
+					<p>The most common way to approach CSS theming is using a body class. By setting the <code>$create</code> parameter to <b>body</b>, we are telling vary to create body classes for us.</p>
+					<p>The body class will be built based on a prefix and the current entity in the loop. By default, <code>is-</code> will be used as the prefix, so the class would be <code>.is-entity</code>.</p>
+					<p>If you want to change the prefix you can do so by setting <code>$vary-default-bodyclass</code>.</p>
+					<p>The body class will always be placed outside the entire selector. If an HTML class is wrapping the selector, you will need to use the body with HTML class wrapper (see next creation mode).</p>
+				</div>
 
-			<div class="sidebyside__code code">
-				<div class="code__caption">Body class example - <a target="_blank" rel="external" href="http://sassmeister.com/gist/c92ccceb6ff35effa9ac">See on SassMeister</a></div>
-				<div class="code__panel code__scss">
+				<div class="sidebyside__code code">
+					<div class="code__caption">Body class example - <a target="_blank" rel="external" href="http://sassmeister.com/gist/c92ccceb6ff35effa9ac">See on SassMeister</a></div>
+					<div class="code__panel code__scss">
 <pre>
 .foo .example{
 	background: red;
@@ -96,8 +97,8 @@ $vary-map: (
 	}
 }
 </pre>
-				</div>
-				<div class="code__panel code__css">
+					</div>
+					<div class="code__panel code__css">
 <pre>
 .foo .example{
 	background: red;	
@@ -113,23 +114,23 @@ $vary-map: (
 	border: 10px solid red;
 }
 </pre>
+					</div>
 				</div>
 			</div>
-		</div>
 
 
-		<div class="sidebyside">
-			<div class="sidebyside__text wrapper">
-				<h3 class="extra-space">Body with HTML class wrapper</h3>
-				<p>If you need to apply the body class on a selector that contains an HTML class.</p>
-				<p>The body class will be built based on a prefix and the current entity in the loop. By default, <code>is-</code> will be used as the prefix, so the class would be <code>.is-entity</code>.</p>
-				<p>If you want to change the prefix you can do so by setting <code>$vary-default-bodyclass</code>.</p>
-				<p>The body class will always be placed outside the entire selector. If an HTML class is wrapping the selector, you will need to use the body with HTML class wrapper (see next creation mode).</p>
-			</div>
+			<div class="sidebyside">
+				<div class="sidebyside__text wrapper">
+					<h3 class="extra-space">Body with HTML class wrapper</h3>
+					<p>If you need to apply the body class on a selector that contains an HTML class.</p>
+					<p>The body class will be built based on a prefix and the current entity in the loop. By default, <code>is-</code> will be used as the prefix, so the class would be <code>.is-entity</code>.</p>
+					<p>If you want to change the prefix you can do so by setting <code>$vary-default-bodyclass</code>.</p>
+					<p>The body class will always be placed outside the entire selector. If an HTML class is wrapping the selector, you will need to use the body with HTML class wrapper (see next creation mode).</p>
+				</div>
 
-			<div class="sidebyside__code code">
-				<div class="code__caption">Body class with HTML class wrapper example</div>
-				<div class="code__panel code__scss">
+				<div class="sidebyside__code code">
+					<div class="code__caption">Body class with HTML class wrapper example</div>
+					<div class="code__panel code__scss">
 <pre>
 .js .foo{
 	background: red;
@@ -140,8 +141,8 @@ $vary-map: (
 	}
 }
 </pre>
-				</div>
-				<div class="code__panel code__css">
+					</div>
+					<div class="code__panel code__css">
 <pre>
 .foo{
 	background: red;	
@@ -157,8 +158,9 @@ $vary-map: (
 	border: 10px solid red;
 }
 </pre>
-				</div>
-			</div>	
+					</div>
+				</div>	
+			</div>
 		</div>
 
 

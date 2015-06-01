@@ -3,6 +3,8 @@
 
 .header{
 	@extend %clearfix;	
+	//background: darken($color-tertiary, 20%);
+	border-bottom: .25em solid $color-tertiary;
 }
 
 .nav-toggle-menu{
@@ -29,11 +31,16 @@
 	.logo{
 		border: .25rem solid $color-tertiary;
 		border-top: none;
+		border-bottom: none;
 	}
 }
 
 
 @include mq($from: medium) {	
+
+	.header{
+		border-width: $border-width;
+	}
 	.logo{			
 		border-width: .5rem;
 	}
