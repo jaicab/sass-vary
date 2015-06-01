@@ -1,6 +1,7 @@
 
-@include mq($until: wide) {
+@include mq($until: big) {
 	.wrapper{
+		max-width: none;
 		width: auto;
 	}
 }
