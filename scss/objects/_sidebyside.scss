@@ -14,6 +14,10 @@
 	.sidebyside__text{
 		width: 33.33% !important;
 		float: left;
+
+		p{
+			text-align: justify;
+		}
 	}
 
 	.sidebyside__code{
