@@ -1,59 +1,9 @@
-# [sass-vary](http://jaicab.com/sass-vary/)
->vary is a Sass mixin that creates consistent variations of your modules with BEM modifiers or body classes
+# [vary - Sass theming made easy](http://jaicab.com/sass-vary/)
+>The vary mixin is the most flexible, scalable and modular Sass theming solution out there.
 
-##Features
-* Enviroment related variables
-* Consistent enviroment naming
-* Writes consistent modifier body classes
-* Writes consistent BEM modifiers
-
-
-##Quick example
-
-Your `$vary-map` lists all the values for each variation. As seen in the example, they can be any kind of data that can be stored in a Sass variable.
-```sass
-$vary-map: (
-  'user': (
-    'color-primary': #333,
-    'color-secondary': #069,
-    'color-tertiary': red,
-    'border-box': 1px solid #ff0
-  ),
-  'admin': (
-    'color-primary': #f0f,
-    'color-secondary': #000,
-    'color-tertiary': red,
-    'border-box': 10px solid red
-  )
-);
-```
-
-Then you can start using it. The most common scenario is body classes, for which the most common pattern is as `.is-foo`.
-```sass
-.foo{
-  font-size: .9em;
-    
-  @include vary {
-    color: vary-get('color-primary');
-  }
-}
-```
-
-This code would compile into:
-```css
-.foo{
-  font-size: .9em;
-}
-.is-user .foo{
-  color: #333;  
-}
-.is-admin .foo{
-  color: #f0f;  
-}
-```
-
-For BEM modifier usage, more specific examples and options please [go to the site](http://jaicab.com/vary/).
-
+* See [the site](http://jaicab.com/sass-vary/)
+* Read [the article](http://jaicab.com/2015/06/02/revisiting-sass-theming/)
+* Play with it [on SassMeister](http://sassmeister.com/gist/jaicab/c92ccceb6ff35effa9ac)
 
 ## License
-sass-vary is released under the MIT license
+sass-vary was made with love by [Jaime Caballero](http://jaicab.com) and it's released under the MIT license
