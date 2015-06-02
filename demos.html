@@ -285,7 +285,8 @@ html.js .is-superadmin .foo{
 			<div class="sidebyside">
 				<div class="sidebyside__text wrapper">
 					<h3>Targeting</h3>
-					<p>Using the <code>$for</code> parameter you can make vary go through <i>some</i> of the entities from them map, not all of them.</p>
+					<p>Using the <code>$for</code> parameter to target specific entities.</p>
+					<p>This way you can make vary go through <i>some</i> of the entities from them map, not all of them.</p>
 					<p>If any of the entities given are not on the map, vary will throw an error. The rest of the entities will be ignored.</p>
 					<p>If you need to set this behaviour for these entities but a different one for the rest of them, you need to exclude them (see next).</p>
 				</div>
@@ -333,7 +334,8 @@ html.js .is-superadmin .foo{
 			<div class="sidebyside">
 				<div class="sidebyside__text wrapper">
 					<h3>Excluding</h3>
-					<p>The reversed version of the targeted ones. Using the <code>$not</code> parameter, you can exclude entities so vary doesn't loop through them.</p>
+					<p>The reversed version of the targeted ones.</p>
+					<p>Using the <code>$not</code> parameter, you can exclude entities so vary doesn't loop through them.</p>
 					<p>vary will loop through every entity but the ones listed in the <code>$not</code> list, so a combination of one vary looping throught the targeted ones and then another without them will cover every single entity in the map.</p>
 
 					<p>In this example, the same result could have been achieved by using the <code>$for</code> parameter with a <code>superadmin</code> value, but if new entities were added to the map, they would not be covered.</p>
