@@ -20,7 +20,6 @@
 		padding: 0;
 		margin:0;
 		background: none;
-		min-height: 3em;
 	}
 
 	&:before{
@@ -90,7 +89,6 @@
 		&:before{
 			font-size: .9em;
 		}
-
 		
 		& + & {
 			border-top: none;
