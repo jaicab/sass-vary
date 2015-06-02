@@ -17,11 +17,11 @@
 ///   $vary-map: (
 ///      user: (
 ///        'color-primary': blue,
-///        'border': "1px solid #ff0",
+///        'border': '1px solid #ff0',
 ///      ),
 ///      admin: (
 ///        'color-primary': pink,
-///        'border': "10px solid black",
+///        'border': '10px solid black',
 ///      )
 ///    );
 ///
@@ -108,7 +108,7 @@ $vary-loop-map: $vary-map;
 /// @param {String} $entity - Name of the entity you want to access
 ///
 /// @example scss
-///   vary-get("color-primary", user);
+///   vary-get('color-primary', user);
 ///   // -> #333
 ///
 /// @returns {String} Value of key for that entity
@@ -120,10 +120,10 @@ $vary-loop-map: $vary-map;
     @if map-has-key($entity-map, $key) {
       $ret: unquote(map-get($entity-map, $key));
     } @else {
-      @error "The entity '#{$entity}' doesn't have a value for '#{$key}'.";
+      @error 'The entity `#{$entity}` doesn\'t have a value for `#{$key}`.';
     }
   } @else {
-    @error "There is no '#{$entity}' entity in your variations list.";
+    @error 'There is no `#{$entity}` entity in your variations list.';
   }
 
   @return $ret;
@@ -146,7 +146,7 @@ $vary-loop-map: $vary-map;
   $ret: ();
   
   // If haven't specified anything, default to all
-  @if $included == "all" {
+  @if $included == 'all' {
     $included: map-keys($map);
   }
 
@@ -155,7 +155,7 @@ $vary-loop-map: $vary-map;
 
     // If it's in our map
     @if map-has-key($map, $key)==null {
-      @error "There is no '#{$key}' class in your variations list.";
+      @error 'There is no `#{$key}` class in your variations list.';
     } 
 
     // But not excluded
@@ -219,11 +219,11 @@ $vary-loop-map: $vary-map;
 ///   $vary-map: (
 ///      user: (
 ///        'color-primary': blue,
-///        'border': "1px solid #ff0",
+///        'border': '1px solid #ff0',
 ///      ),
 ///      admin: (
 ///        'color-primary': pink,
-///        'border': "10px solid black",
+///        'border': '10px solid black',
 ///      )
 ///    );
 ///
@@ -256,7 +256,7 @@ $vary-loop-map: $vary-map;
 
   @if & {
     $selector: &;
-    $bodyclass: ".#{$vary-default-bodyclass}#{$vary-loop-entity}";
+    $bodyclass: '.#{$vary-default-bodyclass}#{$vary-loop-entity}';
     
     @if $vary-libsass == true {
       @at-root{
@@ -274,7 +274,7 @@ $vary-loop-map: $vary-map;
       }
     }
   } @else {
-    @error "No parent found. I need the parent HTML class to place everything on its right place.";
+    @error 'No parent found. I need the parent HTML class to place everything on its right place.';
   }
 
 }
@@ -298,7 +298,7 @@ $vary-loop-map: $vary-map;
 ///   .foo{
 ///     font-size: .9em;
 ///       
-///     @include vary-body("user") {
+///     @include vary-body('user') {
 ///       color: vary-get('color-primary');
 ///     }
 ///   }
@@ -352,7 +352,7 @@ $vary-loop-map: $vary-map;
 ///   .foo{
 ///     font-size: .9em;
 ///       
-///     @include vary-mod("user") {
+///     @include vary-mod('user') {
 ///       color: vary-get('color-primary');
 ///     }
 ///   }
@@ -371,7 +371,7 @@ $vary-loop-map: $vary-map;
 
   // Do we have a parent selector?
   @if not & {
-    @error "You can't create a modifier without a base.";
+    @error 'You can\'t create a modifier without a base.';
   } @else {
 
     @at-root {
@@ -403,7 +403,7 @@ $vary-loop-map: $vary-map;
 ///   .foo{
 ///     font-size: .9em;
 ///       
-///     @include vary-mod("user") {
+///     @include vary-mod('user') {
 ///       color: vary-get('color-primary');
 ///     }
 ///   }
@@ -436,11 +436,11 @@ $vary-loop-map: $vary-map;
 ///   $vary-map: (
 ///      user: (
 ///        'color-primary': blue,
-///        'border': "1px solid #ff0",
+///        'border': '1px solid #ff0',
 ///      ),
 ///      admin: (
 ///        'color-primary': pink,
-///        'border': "10px solid black",
+///        'border': '10px solid black',
 ///      )
 ///    );
 ///
@@ -466,26 +466,26 @@ $vary-loop-map: $vary-map;
 ///     border: 10px solid red;  
 ///   }
 ///   
-@mixin vary($create, $for: "all", $not: (), $loop: $vary-map){
+@mixin vary($create, $for: 'all', $not: (), $loop: $vary-map){
   $vary-loop-map: $loop !global;
   $entity-list: vary-filter($for, $not, $loop);
 
   // Go through all the creation modes
-  @if $create == "body" {
+  @if $create == 'body' {
     // Body class
     @each $entity in $entity-list {
       @include vary-single-body($entity) {
         @content;
       }
     }
-  } @elseif $create == "htmlbody" {
+  } @elseif $create == 'htmlbody' {
     // Body class with html parent class
     @each $entity in $entity-list {
       @include vary-single-htmlbody($entity) {
         @content;
       }
     }
-  } @elseif $create == "mod" {
+  } @elseif $create == 'mod' {
     // BEM modifier
     @each $entity in $entity-list {
       @include vary-single-mod($entity) {
