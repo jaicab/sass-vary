@@ -91,14 +91,14 @@ $vary-map: (
 /// Current _entity_ during the loop. Can be used in custom creation mode.
 ///
 /// @type String
-$vary-loop-entity: '' !global;
+$vary-loop-entity: '';
 
 
 
 /// Current _map_ during the loop. Can be used in custom creation.
 ///
 /// @type Map
-$vary-loop-map: $vary-map !global;
+$vary-loop-map: $vary-map;
 
 
 
