@@ -49,6 +49,7 @@
 ///
 ///
 /// 2015 - Made with ♥ by Jaime Caballero (@jaicab_)
+/// @author Jaime Caballero (@jaicab_)
 ////
 
 
@@ -120,10 +121,10 @@ $vary-loop-map: $vary-map !global;
     @if map-has-key($entity-map, $key) {
       $ret: unquote(map-get($entity-map, $key));
     } @else {
-      @error "The entity '#{$entity}' doesn't have a value for '#{$key}'.";
+      @include log("The entity '#{$entity}' doesn't have a value for '#{$key}'.");
     }
   } @else {
-    @error "There is no '#{$entity}' entity in your variations list.";
+    @include log("There is no '#{$entity}' entity in your variations list.");
   }
 
   @return $ret;
@@ -155,7 +156,7 @@ $vary-loop-map: $vary-map !global;
 
     // If it's in our map
     @if map-has-key($map, $key)==null {
-      @error "There is no '#{$key}' class in your variations list.";
+      @include log("There is no '#{$key}' class in your variations list.");
     } 
 
     // But not excluded
@@ -274,7 +275,7 @@ $vary-loop-map: $vary-map !global;
       }
     }
   } @else {
-    @error "No parent found. I need the parent HTML class to place everything on its right place.";
+    @include log("No parent found. I need the parent HTML class to place everything on its right place.");
   }
 
 }
@@ -371,7 +372,7 @@ $vary-loop-map: $vary-map !global;
 
   // Do we have a parent selector?
   @if not & {
-    @error "You can't create a modifier without a base.";
+    @include log("You can't create a modifier without a base.");
   } @else {
 
     @at-root {
@@ -501,3 +502,26 @@ $vary-loop-map: $vary-map !global;
     }
   }
 }
+
+/// Log a message either with `@error` if supported else with `@warn`
+/// 
+/// @access private
+///
+/// @author Hugo Giraudel
+///
+/// @param {String} $message - Message to log
+@mixin log($message) {
+  @if function-exists('at-error') {
+    @error $message;
+  } @else {
+    @warn $message;
+    // Trigger an error
+    @if noop() {}
+  }
+}
+
+/// Function with no `@return` called next to `@warn` in Sassy 3.3
+/// to trigger a compiling error and stop the process
+/// 
+/// @access private
+@function noop() {}
