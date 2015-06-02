@@ -82,7 +82,8 @@ $vary-map: (
 			<div class="sidebyside">
 				<div class="sidebyside__text wrapper">
 					<h3>Body class</h3>
-					<p>The most common way to approach CSS theming is using a body class. By setting the <code>$create</code> parameter to <b>body</b>, we are telling vary to create body classes for us.</p>
+					<p>The most common way to approach CSS theming is using a body class.</p>
+					<p>By setting the <code>$create</code> parameter to <b>body</b>, we are telling vary to create body classes for us.</p>
 					<p>The body class will be built based on a prefix and the current entity in the loop. By default, <code>is-</code> will be used as the prefix, so the class would be <code>.is-entity</code>.</p>
 					<p>If you want to change the prefix you can do so by setting <code>$vary-default-bodyclass</code>.</p>
 					<p>The body class will always be placed outside the entire selector. If an HTML class is wrapping the selector, you will need to use the body with HTML class wrapper (see next creation mode).</p>
@@ -131,6 +132,7 @@ $vary-map: (
 			<div class="sidebyside">
 				<div class="sidebyside__text wrapper">
 					<h3>Body with HTML class wrapper</h3>
+					<p>You'll need to use this approach if you use Modernizr.</p>
 					<p>If you need to apply the body class on a selector that contains an HTML class while following the same functionality as the body class mode, set the <code>$create</code> parameter to <b>htmlbody</b>.</p>
 					<p>Using the <code>vary-htmlclass</code> function, vary builds a selector formed by the HTML class, then the body class and then the rest of the selector.</p>
 					<p>The HTML class will always be considered the first class in the selector. In this example, <code>.js</code>.</p>
@@ -175,9 +177,9 @@ html.js .is-superadmin .foo{
 			<div class="sidebyside">
 				<div class="sidebyside__text wrapper">
 					<h3>BEM modifier</h3>
-					<p>When differently styled modules need to be present on the same page, the most common approach is to create a modifier.</p>
+					<p>For when differently styled modules need to be present on the same page.</p>
 
-					<p>To define the modifier, you will need the block of which vary will create the modifiers. For code quality reasons, the BEM modifier is placed at the same scope as the element.</p>
+					<p>In this case, the most common approach is to create a modifier. To define it, you will need the block of which vary will create the modifiers. For code quality reasons, the BEM modifier is placed at the same scope as the element.</p>
 				</div>
 
 				<div class="sidebyside__code code">
