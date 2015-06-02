@@ -25,7 +25,7 @@
 ///      )
 ///    );
 ///
-///   .foo{
+///   .foo {
 ///     background: red;
 ///       
 ///     @include vary($create: body) {
@@ -35,14 +35,14 @@
 ///   }
 ///
 ///   // Compiles into
-///   .foo{
+///   .foo {
 ///     background: red;
 ///   }
-///   .is-user .foo{
+///   .is-user .foo {
 ///     color: blue;  
 ///     border: 1px solid #ff0;  
 ///   }
-///   .is-admin .foo{
+///   .is-admin .foo {
 ///     color: pink;  
 ///     border: 10px solid red;  
 ///   }
@@ -114,20 +114,19 @@ $vary-loop-map: $vary-map;
 ///
 /// @returns {String} Value of key for that entity
 @function vary-get($key, $entity: $vary-loop-entity, $map: $vary-loop-map) {
-  $ret: '';
+  $entity-map: map-get($map, $entity);
 
-  @if map-has-key($map, $entity) {
-    $entity-map: map-get($map, $entity);
-    @if map-has-key($entity-map, $key) {
-      $ret: unquote(map-get($entity-map, $key));
-    } @else {
-      @include log('The entity `#{$entity}` doesn\'t have a value for `#{$key}`.');
-    }
-  } @else {
+  @if not $entity-map {
     @include log('There is no `#{$entity}` entity in your variations list.');
   }
 
-  @return $ret;
+  $ret: map-get($entity-map, $key);
+
+  @if not $ret {
+    @include log('The entity `#{$entity}` doesn\'t have a value for `#{$key}`.');    
+  }
+
+  @return unquote($ret);
 }
 
 
@@ -155,14 +154,14 @@ $vary-loop-map: $vary-map;
   @each $key in $included {
 
     // If it's in our map
-    @if map-has-key($map, $key)==null {
+    @if not map-has-key($map, $key) {
       @include log('There is no `#{$key}` class in your variations list.');
     } 
 
     // But not excluded
-    @elseif not index($excluded, $key) {
+    @if not index($excluded, $key) {
       // Add it to the final list
-      $ret: append($ret, $key, comma);
+      $ret: append($ret, $key, 'comma');
     }
   }
 
@@ -192,19 +191,19 @@ $vary-loop-map: $vary-map;
     $with-bodyclass: append($with-bodyclass, nth($selector, 1));
 
     // Add body class - .htmlclass .bodyclass
-    $with-bodyclass: append($with-bodyclass, unquote($bodyclass), space);
+    $with-bodyclass: append($with-bodyclass, unquote($bodyclass), 'space');
 
     // If more than one element
-    @if(length($selector)>1){
+    @if length($selector) > 1 {
       // Each restant element - .htmlclass .bodyclass .otherselectors
       @for $i from 2 through length($selector) {
         // Add the other selectors
-        $with-bodyclass: append($with-bodyclass, nth($selector, $i), space);
+        $with-bodyclass: append($with-bodyclass, nth($selector, $i), 'space');
       }
     }
 
     // Merge it all in the selector list
-    $ret: append($ret, $with-bodyclass, comma);
+    $ret: append($ret, $with-bodyclass, 'comma');
   }
 
   @return $ret;
@@ -228,7 +227,7 @@ $vary-loop-map: $vary-map;
 ///      )
 ///    );
 ///
-///   .foo{
+///   .foo {
 ///     background: red;
 ///       
 ///     @include vary($create: htmlbody) {
@@ -238,14 +237,14 @@ $vary-loop-map: $vary-map;
 ///   }
 ///
 ///   // Compiles into
-///   .js .foo{
+///   .js .foo {
 ///     font-size: .9em;
 ///   }
-///   .js .is-user .foo{
+///   .js .is-user .foo {
 ///     color: blue;
 ///     border: 1px solid #ff0;
 ///   }
-///   .js .is-admin .foo{
+///   .js .is-admin .foo {
 ///     color: pink;
 ///     border: 10px solid black;
 ///   }
@@ -255,27 +254,25 @@ $vary-loop-map: $vary-map;
   $vary-loop-entity: $entity !global;
   $selector-list: ();
 
-  @if & {
-    $selector: &;
-    $bodyclass: '.#{$vary-default-bodyclass}#{$vary-loop-entity}';
-    
-    @if $vary-libsass == true {
-      @at-root{
-        html{
-          &#{vary-htmlclass($selector, $bodyclass)} {
-            @content;
-          }
-        }
-      }
-    } @else {
-      @at-root{
-        #{vary-htmlclass($selector, $bodyclass)} {
+  @if not & {
+    @include log('No parent found. I need the parent HTML class to place everything on its right place.');
+  }
+
+  $selector: &;
+  $bodyclass: '.#{$vary-default-bodyclass}#{$vary-loop-entity}';
+  
+  @at-root{
+    @if $vary-libsass {
+      html {
+        &#{vary-htmlclass($selector, $bodyclass)} {
           @content;
         }
       }
+    } @else {
+      #{vary-htmlclass($selector, $bodyclass)} {
+        @content;
+      }
     }
-  } @else {
-    @include log('No parent found. I need the parent HTML class to place everything on its right place.');
   }
 
 }
@@ -296,7 +293,7 @@ $vary-loop-map: $vary-map;
 ///        'color-secondary': #000,
 ///      )
 ///    );
-///   .foo{
+///   .foo {
 ///     font-size: .9em;
 ///       
 ///     @include vary-body('user') {
@@ -305,10 +302,10 @@ $vary-loop-map: $vary-map;
 ///   }
 ///
 ///   // Compiles into
-///   .foo{
+///   .foo {
 ///     font-size: .9em;
 ///   }
-///   .is-user .foo{
+///   .is-user .foo {
 ///     color: #333;  
 ///   }
 ///  
@@ -317,14 +314,12 @@ $vary-loop-map: $vary-map;
   $vary-loop-entity: $entity !global;
   $selector-list: ();
 
-  @if & {
-    @at-root{
+  @at-root{
+    @if & {
       .#{$vary-default-bodyclass}#{$entity} & {
         @content;
       }
-    }
-  } @else {
-    @at-root{
+    } @else {
       .#{$vary-default-bodyclass}#{$entity} {
         @content;
       }
@@ -350,7 +345,7 @@ $vary-loop-map: $vary-map;
 ///        'color-secondary': #000,
 ///      )
 ///    );
-///   .foo{
+///   .foo {
 ///     font-size: .9em;
 ///       
 ///     @include vary-mod('user') {
@@ -359,10 +354,10 @@ $vary-loop-map: $vary-map;
 ///   }
 ///
 ///   // Compiles into
-///   .foo{
+///   .foo {
 ///     font-size: .9em;
 ///   }
-///   .foo--user{
+///   .foo--user {
 ///     color: #333;  
 ///   }
 ///   
@@ -373,14 +368,12 @@ $vary-loop-map: $vary-map;
   // Do we have a parent selector?
   @if not & {
     @include log('You can\'t create a modifier without a base.');
-  } @else {
+  } 
 
-    @at-root {
-      &--#{$entity} {
-        @content;
-      }
+  @at-root {
+    &--#{$entity} {
+      @content;
     }
-  
   }
 }
 
@@ -401,7 +394,7 @@ $vary-loop-map: $vary-map;
 ///        'color-secondary': #000,
 ///      )
 ///    );
-///   .foo{
+///   .foo {
 ///     font-size: .9em;
 ///       
 ///     @include vary-mod('user') {
@@ -410,10 +403,10 @@ $vary-loop-map: $vary-map;
 ///   }
 ///
 ///   // Compiles into
-///   .foo{
+///   .foo {
 ///     font-size: .9em;
 ///   }
-///   .foo--user{
+///   .foo--user {
 ///     color: #333;  
 ///   }
 ///   
@@ -455,14 +448,14 @@ $vary-loop-map: $vary-map;
 ///   }
 ///
 ///   // Compiles into
-///   .foo{
+///   .foo {
 ///     background: red;
 ///   }
-///   .is-user .foo{
+///   .is-user .foo {
 ///     color: blue;  
 ///     border: 1px solid #ff0;  
 ///   }
-///   .is-admin .foo{
+///   .is-admin .foo {
 ///     color: pink;  
 ///     border: 10px solid red;  
 ///   }
