@@ -117,13 +117,13 @@ $vary-loop-map: $vary-map;
   $entity-map: map-get($map, $entity);
 
   @if not $entity-map {
-    @include log('There is no `#{$entity}` entity in your variations list.');
+    @error 'There is no `#{$entity}` entity in your variations list.';
   }
 
   $ret: map-get($entity-map, $key);
 
   @if not $ret {
-    @include log('The entity `#{$entity}` doesn\'t have a value for `#{$key}`.');    
+    @error 'The entity `#{$entity}` doesn\'t have a value for `#{$key}`.';    
   }
 
   @return unquote($ret);
@@ -155,7 +155,7 @@ $vary-loop-map: $vary-map;
 
     // If it's in our map
     @if not map-has-key($map, $key) {
-      @include log('There is no `#{$key}` class in your variations list.');
+      @error 'There is no `#{$key}` class in your variations list.';
     } 
 
     // But not excluded
@@ -255,7 +255,7 @@ $vary-loop-map: $vary-map;
   $selector-list: ();
 
   @if not & {
-    @include log('No parent found. I need the parent HTML class to place everything on its right place.');
+    @error 'No parent found. I need the parent HTML class to place everything on its right place.';
   }
 
   $selector: &;
@@ -367,7 +367,7 @@ $vary-loop-map: $vary-map;
 
   // Do we have a parent selector?
   @if not & {
-    @include log('You can\'t create a modifier without a base.');
+    @error 'You can\'t create a modifier without a base.';
   } 
 
   @at-root {
@@ -460,7 +460,7 @@ $vary-loop-map: $vary-map;
 ///     border: 10px solid red;  
 ///   }
 ///   
-@mixin vary($create, $for: 'all', $not: (), $loop: $vary-map){
+@mixin vary($create: 'mod', $for: 'all', $not: (), $loop: $vary-map){
   $vary-loop-map: $loop !global;
   $entity-list: vary-filter($for, $not, $loop);
 
@@ -495,26 +495,3 @@ $vary-loop-map: $vary-map;
     }
   }
 }
-
-/// Log a message either with `@error` if supported else with `@warn`
-/// 
-/// @access private
-///
-/// @author Hugo Giraudel
-///
-/// @param {String} $message - Message to log
-@mixin log($message) {
-  @if function-exists('at-error') {
-    @error $message;
-  } @else {
-    @warn $message;
-    // Trigger an error
-    @if noop() {}
-  }
-}
-
-/// Function with no `@return` called next to `@warn` in Sassy 3.3
-/// to trigger a compiling error and stop the process
-/// 
-/// @access private
-@function noop() {}
