@@ -61,12 +61,18 @@ $vary-libsass: true !default;
 
 
 
-/// Body class prefix. 
-/// Will work as .#{$vary-default-bodyclass}foo
+/// When creating a class, vary will use this prefix. 
+/// Will work as .#{$vary-default-prefix-class}foo
 ///
 /// @type String
-$vary-default-bodyclass: 'is-' !default;
+$vary-default-prefix-class: 'is-' !default;
 
+
+/// Default creation mode.
+/// Will set a default value for $create.
+///
+/// @type String
+$vary-default-create: 'modifier' !default;
 
 
 /// List of variations.
@@ -259,7 +265,7 @@ $vary-loop-map: $vary-map;
   }
 
   $selector: &;
-  $bodyclass: '.#{$vary-default-bodyclass}#{$vary-loop-entity}';
+  $bodyclass: '.#{$vary-default-prefix-class}#{$vary-loop-entity}';
   
   @at-root{
     @if $vary-libsass {
@@ -309,18 +315,18 @@ $vary-loop-map: $vary-map;
 ///     color: #333;  
 ///   }
 ///  
-@mixin vary-single-body($entity) {
+@mixin vary-single-parent($entity) {
   // Update the global helper class
   $vary-loop-entity: $entity !global;
   $selector-list: ();
 
   @at-root{
     @if & {
-      .#{$vary-default-bodyclass}#{$entity} & {
+      .#{$vary-default-prefix-class}#{$entity} & {
         @content;
       }
     } @else {
-      .#{$vary-default-bodyclass}#{$entity} {
+      .#{$vary-default-prefix-class}#{$entity} {
         @content;
       }
     }
@@ -361,7 +367,7 @@ $vary-loop-map: $vary-map;
 ///     color: #333;  
 ///   }
 ///   
-@mixin vary-single-mod($entity) {
+@mixin vary-single-modifier($entity) {
   // Update the global helper class
   $vary-loop-entity: $entity !global;
 
@@ -460,26 +466,33 @@ $vary-loop-map: $vary-map;
 ///     border: 10px solid red;  
 ///   }
 ///   
-@mixin vary($create, $for: 'all', $not: (), $loop: $vary-map){
+@mixin vary($create: $vary-default-create, $for: 'all', $not: (), $loop: $vary-map){
   $vary-loop-map: $loop !global;
   $entity-list: vary-filter($for, $not, $loop);
 
+  $creation-modes: parent, html, modifier, custom;
+
+  // Check if valid creation mode
+  @if not map-has-key($creation-modes, $create) {
+    @include log('There is no `#{$create}` creation mode in this version of vary.');
+  }
+
   // Go through all the creation modes
-  @if $create == 'body' {
+  @if $create == 'parent' {
     // Body class
     @each $entity in $entity-list {
-      @include vary-single-body($entity) {
+      @include vary-single-parent($entity) {
         @content;
       }
     }
-  } @elseif $create == 'htmlbody' {
+  } @elseif $create == 'html' {
     // Body class with html parent class
     @each $entity in $entity-list {
       @include vary-single-htmlbody($entity) {
         @content;
       }
     }
-  } @elseif $create == 'mod' {
+  } @elseif $create == 'modifier' {
     // BEM modifier
     @each $entity in $entity-list {
       @include vary-single-mod($entity) {
