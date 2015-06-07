@@ -8,7 +8,6 @@
 }
 
 .sidebyside__text{
-
 	&:before{
 		counter-increment: sidebyside;
 		content: counter(sidebyside);
