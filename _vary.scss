@@ -3,7 +3,7 @@
 ////
 /// -------------------------------------------------------------------------------------
 ///
-///                       _vary.scss v1.0 - Consistent CSS theming
+///                       _vary.scss v1.1 - Consistent CSS theming
 ///
 ///                                 jaicab.com/sass-vary/
 ///
@@ -61,11 +61,19 @@ $vary-libsass: true !default;
 
 
 
-/// Body class prefix. 
-/// Will work as .#{$vary-default-bodyclass}foo
+/// When creating a class, vary will use this prefix. 
+/// Will work as .#{$vary-default-prefix-class}foo
 ///
 /// @type String
-$vary-default-bodyclass: 'is-' !default;
+$vary-default-prefix-class: 'is-' !default;
+
+
+
+/// Default creation mode.
+/// Will set a default value for $create.
+///
+/// @type String
+$vary-default-create: 'modifier' !default;
 
 
 
@@ -230,7 +238,7 @@ $vary-loop-map: $vary-map;
 ///   .foo {
 ///     background: red;
 ///       
-///     @include vary($create: htmlbody) {
+///     @include vary($create: insert) {
 ///       background: vary-get('color-primary');
 ///       border: vary-get('border');
 ///     }
@@ -259,7 +267,7 @@ $vary-loop-map: $vary-map;
   }
 
   $selector: &;
-  $bodyclass: '.#{$vary-default-bodyclass}#{$vary-loop-entity}';
+  $bodyclass: '.#{$vary-default-prefix-class}#{$vary-loop-entity}';
   
   @at-root{
     @if $vary-libsass {
@@ -296,7 +304,7 @@ $vary-loop-map: $vary-map;
 ///   .foo {
 ///     font-size: .9em;
 ///       
-///     @include vary-body('user') {
+///     @include vary-single-parent('user') {
 ///       color: vary-get('color-primary');
 ///     }
 ///   }
@@ -309,23 +317,68 @@ $vary-loop-map: $vary-map;
 ///     color: #333;  
 ///   }
 ///  
-@mixin vary-single-body($entity) {
+@mixin vary-single-parent($entity) {
   // Update the global helper class
   $vary-loop-entity: $entity !global;
-  $selector-list: ();
 
   @at-root{
     @if & {
-      .#{$vary-default-bodyclass}#{$entity} & {
+      .#{$vary-default-prefix-class}#{$entity} & {
         @content;
       }
     } @else {
-      .#{$vary-default-bodyclass}#{$entity} {
+      .#{$vary-default-prefix-class}#{$entity} {
         @content;
       }
     }
   }
 
+}
+
+
+
+/// Appends an .is-class class to the element.
+///
+/// @param {String} $entity - Entity key to use.
+///
+/// @example scss
+///   $vary-map: (
+///      user: (
+///        'color-primary': #333,
+///        'color-secondary': #069,
+///      ),
+///      admin: (
+///        'color-primary': #f0f,
+///        'color-secondary': #000,
+///      )
+///    );
+///   .foo {
+///     font-size: .9em;
+///       
+///     @include vary-single-append('user') {
+///       color: vary-get('color-primary');
+///     }
+///   }
+///
+///   // Compiles into
+///   .foo {
+///     font-size: .9em;
+///   }
+///   .foo.is-user {
+///     color: #333;  
+///   }
+///  
+@mixin vary-single-append($entity) {
+  // Update the global helper class
+  $vary-loop-entity: $entity !global;
+
+  @if not & {
+    @error 'No selector found. I need a selector to append the class to.';
+  }
+
+  &.#{$vary-default-prefix-class}#{$entity} {
+    @content;
+  }
 }
 
 
@@ -348,7 +401,7 @@ $vary-loop-map: $vary-map;
 ///   .foo {
 ///     font-size: .9em;
 ///       
-///     @include vary-mod('user') {
+///     @include vary-single-modifier('user') {
 ///       color: vary-get('color-primary');
 ///     }
 ///   }
@@ -361,7 +414,7 @@ $vary-loop-map: $vary-map;
 ///     color: #333;  
 ///   }
 ///   
-@mixin vary-single-mod($entity) {
+@mixin vary-single-modifier($entity) {
   // Update the global helper class
   $vary-loop-entity: $entity !global;
 
@@ -397,8 +450,10 @@ $vary-loop-map: $vary-map;
 ///   .foo {
 ///     font-size: .9em;
 ///       
-///     @include vary-mod('user') {
-///       color: vary-get('color-primary');
+///     @include vary-single-custom('user') {
+///       &.#{$vary-loop-entity} {
+///          color: vary-get('color-primary');
+///       }
 ///     }
 ///   }
 ///
@@ -406,7 +461,7 @@ $vary-loop-map: $vary-map;
 ///   .foo {
 ///     font-size: .9em;
 ///   }
-///   .foo--user {
+///   .foo.user {
 ///     color: #333;  
 ///   }
 ///   
@@ -421,7 +476,7 @@ $vary-loop-map: $vary-map;
 
 /// Creates variations for $vary-map
 ///
-/// @param {String} $create - What vary will create for you (body, htmlbody, mod, custom).
+/// @param {String} $create - What vary will create for you.
 /// @param {List} $for - List of entities to include
 /// @param {List} $not - Excluded list of entities
 /// @param {Map} $loop - Map to loop through
@@ -441,7 +496,7 @@ $vary-loop-map: $vary-map;
 ///   .foo{
 ///     background: red;
 ///       
-///     @include vary($create: body) {
+///     @include vary($create: parent) {
 ///       background: vary-get('color-primary');
 ///       border: vary-get('border');
 ///     }
@@ -460,29 +515,43 @@ $vary-loop-map: $vary-map;
 ///     border: 10px solid red;  
 ///   }
 ///   
-@mixin vary($create: 'mod', $for: 'all', $not: (), $loop: $vary-map){
+@mixin vary($create: $vary-default-create, $for: 'all', $not: (), $loop: $vary-map){
   $vary-loop-map: $loop !global;
   $entity-list: vary-filter($for, $not, $loop);
 
+  $creation-modes: parent, insert, modifier, append, custom;
+
+  // Check if valid creation mode
+  @if not index($creation-modes, $create) {
+    @error 'There is no `#{$create}` creation mode in this version of vary.';
+  }
+
   // Go through all the creation modes
-  @if $create == 'body' {
+  @if $create == 'parent' {
     // Body class
     @each $entity in $entity-list {
-      @include vary-single-body($entity) {
+      @include vary-single-parent($entity) {
         @content;
       }
     }
-  } @elseif $create == 'htmlbody' {
+  } @elseif $create == 'insert' {
     // Body class with html parent class
     @each $entity in $entity-list {
       @include vary-single-htmlbody($entity) {
         @content;
       }
     }
-  } @elseif $create == 'mod' {
+  } @elseif $create == 'modifier' {
     // BEM modifier
     @each $entity in $entity-list {
-      @include vary-single-mod($entity) {
+      @include vary-single-modifier($entity) {
+        @content;
+      }
+    }
+  } @elseif $create == 'append' {
+    // Appended class
+    @each $entity in $entity-list {
+      @include vary-single-append($entity) {
         @content;
       }
     }
