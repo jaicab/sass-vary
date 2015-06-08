@@ -410,7 +410,7 @@ html.js .is-superadmin .foo{
 		border: vary-get('border');
 	}
 
-	@include vary($create: mod, $not: user admin) {
+	@include vary($create: modifier, $not: user admin) {
 		background: vary-get('color-primary');
 		border: vary-get('border');
 	}
