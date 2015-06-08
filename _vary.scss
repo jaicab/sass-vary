@@ -3,7 +3,7 @@
 ////
 /// -------------------------------------------------------------------------------------
 ///
-///                       _vary.scss v1.0 - Consistent CSS theming
+///                       _vary.scss v1.1 - Consistent CSS theming
 ///
 ///                                 jaicab.com/sass-vary/
 ///
@@ -68,11 +68,13 @@ $vary-libsass: true !default;
 $vary-default-prefix-class: 'is-' !default;
 
 
+
 /// Default creation mode.
 /// Will set a default value for $create.
 ///
 /// @type String
 $vary-default-create: 'modifier' !default;
+
 
 
 /// List of variations.
@@ -123,13 +125,13 @@ $vary-loop-map: $vary-map;
   $entity-map: map-get($map, $entity);
 
   @if not $entity-map {
-    @include log('There is no `#{$entity}` entity in your variations list.');
+    @error 'There is no `#{$entity}` entity in your variations list.';
   }
 
   $ret: map-get($entity-map, $key);
 
   @if not $ret {
-    @include log('The entity `#{$entity}` doesn\'t have a value for `#{$key}`.');    
+    @error 'The entity `#{$entity}` doesn\'t have a value for `#{$key}`.';    
   }
 
   @return unquote($ret);
@@ -161,7 +163,7 @@ $vary-loop-map: $vary-map;
 
     // If it's in our map
     @if not map-has-key($map, $key) {
-      @include log('There is no `#{$key}` class in your variations list.');
+      @error 'There is no `#{$key}` class in your variations list.';
     } 
 
     // But not excluded
@@ -236,7 +238,7 @@ $vary-loop-map: $vary-map;
 ///   .foo {
 ///     background: red;
 ///       
-///     @include vary($create: htmlbody) {
+///     @include vary($create: insert) {
 ///       background: vary-get('color-primary');
 ///       border: vary-get('border');
 ///     }
@@ -261,7 +263,7 @@ $vary-loop-map: $vary-map;
   $selector-list: ();
 
   @if not & {
-    @include log('No parent found. I need the parent HTML class to place everything on its right place.');
+    @error 'No parent found. I need the parent HTML class to place everything on its right place.';
   }
 
   $selector: &;
@@ -302,7 +304,7 @@ $vary-loop-map: $vary-map;
 ///   .foo {
 ///     font-size: .9em;
 ///       
-///     @include vary-body('user') {
+///     @include vary-single-parent('user') {
 ///       color: vary-get('color-primary');
 ///     }
 ///   }
@@ -318,7 +320,6 @@ $vary-loop-map: $vary-map;
 @mixin vary-single-parent($entity) {
   // Update the global helper class
   $vary-loop-entity: $entity !global;
-  $selector-list: ();
 
   @at-root{
     @if & {
@@ -332,6 +333,52 @@ $vary-loop-map: $vary-map;
     }
   }
 
+}
+
+
+
+/// Appends an .is-class class to the element.
+///
+/// @param {String} $entity - Entity key to use.
+///
+/// @example scss
+///   $vary-map: (
+///      user: (
+///        'color-primary': #333,
+///        'color-secondary': #069,
+///      ),
+///      admin: (
+///        'color-primary': #f0f,
+///        'color-secondary': #000,
+///      )
+///    );
+///   .foo {
+///     font-size: .9em;
+///       
+///     @include vary-single-append('user') {
+///       color: vary-get('color-primary');
+///     }
+///   }
+///
+///   // Compiles into
+///   .foo {
+///     font-size: .9em;
+///   }
+///   .foo.is-user {
+///     color: #333;  
+///   }
+///  
+@mixin vary-single-append($entity) {
+  // Update the global helper class
+  $vary-loop-entity: $entity !global;
+
+  @if not & {
+    @error 'No selector found. I need a selector to append the class to.';
+  }
+
+  &.#{$vary-default-prefix-class}#{$entity} {
+    @content;
+  }
 }
 
 
@@ -354,7 +401,7 @@ $vary-loop-map: $vary-map;
 ///   .foo {
 ///     font-size: .9em;
 ///       
-///     @include vary-mod('user') {
+///     @include vary-single-modifier('user') {
 ///       color: vary-get('color-primary');
 ///     }
 ///   }
@@ -373,7 +420,7 @@ $vary-loop-map: $vary-map;
 
   // Do we have a parent selector?
   @if not & {
-    @include log('You can\'t create a modifier without a base.');
+    @error 'You can\'t create a modifier without a base.';
   } 
 
   @at-root {
@@ -403,8 +450,10 @@ $vary-loop-map: $vary-map;
 ///   .foo {
 ///     font-size: .9em;
 ///       
-///     @include vary-mod('user') {
-///       color: vary-get('color-primary');
+///     @include vary-single-custom('user') {
+///       &.#{$vary-loop-entity} {
+///          color: vary-get('color-primary');
+///       }
 ///     }
 ///   }
 ///
@@ -412,7 +461,7 @@ $vary-loop-map: $vary-map;
 ///   .foo {
 ///     font-size: .9em;
 ///   }
-///   .foo--user {
+///   .foo.user {
 ///     color: #333;  
 ///   }
 ///   
@@ -427,7 +476,7 @@ $vary-loop-map: $vary-map;
 
 /// Creates variations for $vary-map
 ///
-/// @param {String} $create - What vary will create for you (body, htmlbody, mod, custom).
+/// @param {String} $create - What vary will create for you.
 /// @param {List} $for - List of entities to include
 /// @param {List} $not - Excluded list of entities
 /// @param {Map} $loop - Map to loop through
@@ -447,7 +496,7 @@ $vary-loop-map: $vary-map;
 ///   .foo{
 ///     background: red;
 ///       
-///     @include vary($create: body) {
+///     @include vary($create: parent) {
 ///       background: vary-get('color-primary');
 ///       border: vary-get('border');
 ///     }
@@ -470,11 +519,11 @@ $vary-loop-map: $vary-map;
   $vary-loop-map: $loop !global;
   $entity-list: vary-filter($for, $not, $loop);
 
-  $creation-modes: parent, html, modifier, custom;
+  $creation-modes: parent, insert, modifier, append, custom;
 
   // Check if valid creation mode
-  @if not map-has-key($creation-modes, $create) {
-    @include log('There is no `#{$create}` creation mode in this version of vary.');
+  @if not index($creation-modes, $create) {
+    @error 'There is no `#{$create}` creation mode in this version of vary.';
   }
 
   // Go through all the creation modes
@@ -485,7 +534,7 @@ $vary-loop-map: $vary-map;
         @content;
       }
     }
-  } @elseif $create == 'html' {
+  } @elseif $create == 'insert' {
     // Body class with html parent class
     @each $entity in $entity-list {
       @include vary-single-htmlbody($entity) {
@@ -495,7 +544,14 @@ $vary-loop-map: $vary-map;
   } @elseif $create == 'modifier' {
     // BEM modifier
     @each $entity in $entity-list {
-      @include vary-single-mod($entity) {
+      @include vary-single-modifier($entity) {
+        @content;
+      }
+    }
+  } @elseif $create == 'append' {
+    // Appended class
+    @each $entity in $entity-list {
+      @include vary-single-append($entity) {
         @content;
       }
     }
@@ -508,26 +564,3 @@ $vary-loop-map: $vary-map;
     }
   }
 }
-
-/// Log a message either with `@error` if supported else with `@warn`
-/// 
-/// @access private
-///
-/// @author Hugo Giraudel
-///
-/// @param {String} $message - Message to log
-@mixin log($message) {
-  @if function-exists('at-error') {
-    @error $message;
-  } @else {
-    @warn $message;
-    // Trigger an error
-    @if noop() {}
-  }
-}
-
-/// Function with no `@return` called next to `@warn` in Sassy 3.3
-/// to trigger a compiling error and stop the process
-/// 
-/// @access private
-@function noop() {}
