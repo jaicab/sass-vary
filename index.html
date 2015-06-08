@@ -87,7 +87,7 @@ $vary-map: (
 .foo{
 	background: red;
 
-	@include vary($create: body) {
+	@include vary($create: parent) {
 		background: vary-get('color-primary');
 		border: vary-get('border');
 	}
@@ -124,11 +124,12 @@ $vary-map: (
 			<p>vary is very powerful and full of possibilities. Here's a summary of what it can do.</p>
 
 			<h3 class="extra-space">Creation modes</h3>
-			<p>vary has <b>4 creation modes</b> at the moment:</p>
+			<p>vary has <b>5 creation modes</b> at the moment:</p>
 			<ul>
-				<li><b>Body/parent class</b>: The most common way to approach theming is using a body/parent class.</li>
-				<li><b>Body + HTML class</b>: If you need to apply the body class on a selector that contains an HTML class.</li>
-				<li><b>BEM modifier</b>: When differently styled modules need to be present on the same page, the most common approach is to create a modifier.</li>
+				<li><b>Parent</b>: The most common way to approach theming is using a body/parent class.</li>
+				<li><b>Insert (Body + HTML class)</b>: If you need to apply the body class on a selector that contains an HTML class.</li>
+				<li><b>Modifier (BEM)</b>: When differently styled modules need to be present on the same page, the most common approach is to create a modifier.</li>
+				<li><b>Append</b>: Appends an <code>.is-entity</code> class to the selector.</li>
 				<li><b>Custom</b>: A vary playground. You can create any kind of construction.</li>
 			</ul>
 

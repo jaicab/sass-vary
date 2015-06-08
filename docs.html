@@ -87,9 +87,9 @@ $vary-libsass: true !default;
 
 
 			<h4>$vary-default-bodyclass</h4>
-			<p>Body class prefix. Will work as .#{$vary-default-bodyclass}foo.</p>
+			<p>When creating a class, vary will use this prefix. Will work as .#{$vary-default-prefix-class}foo</p>
 <pre>
-$vary-default-bodyclass: 'is-' !default;
+$vary-default-prefix-class: 'is-' !default;
 </pre>
 
 			<h4>$vary-map</h4>
@@ -111,13 +111,13 @@ $vary-map: (
 			<h4>$vary-loop-entity</h4>
 			<p>Current *entity* during the loop. To be used in custom creation mode.</p>
 <pre>
-$vary-loop-entity: '' !global;
+$vary-loop-entity: '';
 </pre>
 
 			<h4>$vary-loop-map</h4>
 			<p>Current _map_ during the loop. To be used in custom creation.</p>
 <pre>
-$vary-loop-map: $vary-map !global;
+$vary-loop-map: $vary-map;
 </pre>
 		</div>
 
@@ -132,20 +132,19 @@ $vary-loop-map: $vary-map !global;
 			<p>Takes the current entity and map within the vary scope.</p>
 			<pre>
 @function vary-get($key, $entity: $vary-loop-entity, $map: $vary-loop-map) {
-  $ret: '';
+  $entity-map: map-get($map, $entity);
 
-  @if map-has-key($map, $entity) {
-    $entity-map: map-get($map, $entity);
-    @if map-has-key($entity-map, $key) {
-      $ret: unquote(map-get($entity-map, $key));
-    } @else {
-      @error "The entity '#{$entity}' doesn't have a value for '#{$key}'.";
-    }
-  } @else {
-    @error "There is no '#{$entity}' entity in your variations list.";
+  @if not $entity-map {
+    @error 'There is no `#{$entity}` entity in your variations list.';
   }
 
-  @return $ret;
+  $ret: map-get($entity-map, $key);
+
+  @if not $ret {
+    @error 'The entity `#{$entity}` doesn\'t have a value for `#{$key}`.';    
+  }
+
+  @return unquote($ret);
 }
 </pre>
 		</div>
@@ -190,7 +189,7 @@ $vary-map: (
   $ret: ();
   
   // If haven't specified anything, default to all
-  @if $included == "all" {
+  @if $included == 'all' {
     $included: map-keys($map);
   }
 
@@ -198,14 +197,14 @@ $vary-map: (
   @each $key in $included {
 
     // If it's in our map
-    @if map-has-key($map, $key)==null {
-      @error "There is no '#{$key}' class in your variations list.";
+    @if not map-has-key($map, $key) {
+      @error 'There is no `#{$key}` class in your variations list.';
     } 
 
     // But not excluded
-    @elseif not index($excluded, $key) {
+    @if not index($excluded, $key) {
       // Add it to the final list
-      $ret: append($ret, $key, comma);
+      $ret: append($ret, $key, 'comma');
     }
   }
 
@@ -245,19 +244,19 @@ vary-filter(color border thickness, border);
     $with-bodyclass: append($with-bodyclass, nth($selector, 1));
 
     // Add body class - .htmlclass .bodyclass
-    $with-bodyclass: append($with-bodyclass, unquote($bodyclass), space);
+    $with-bodyclass: append($with-bodyclass, unquote($bodyclass), 'space');
 
     // If more than one element
-    @if(length($selector)>1){
+    @if length($selector) > 1 {
       // Each restant element - .htmlclass .bodyclass .otherselectors
       @for $i from 2 through length($selector) {
         // Add the other selectors
-        $with-bodyclass: append($with-bodyclass, nth($selector, $i), space);
+        $with-bodyclass: append($with-bodyclass, nth($selector, $i), 'space');
       }
     }
 
     // Merge it all in the selector list
-    $ret: append($ret, $with-bodyclass, comma);
+    $ret: append($ret, $with-bodyclass, 'comma');
   }
 
   @return $ret;
@@ -302,49 +301,45 @@ vary-htmlclass(
   $vary-loop-entity: $entity !global;
   $selector-list: ();
 
-  @if & {
-    $selector: &;
-    $bodyclass: ".#{$vary-default-bodyclass}#{$vary-loop-entity}";
-    
-    @if $vary-libsass == true {
-      @at-root{
-        html{
-          &#{vary-htmlclass($selector, $bodyclass)} {
-            @content;
-          }
-        }
-      }
-    } @else {
-      @at-root{
-        #{vary-htmlclass($selector, $bodyclass)} {
+  @if not & {
+    @error 'No parent found. I need the parent HTML class to place everything on its right place.';
+  }
+
+  $selector: &;
+  $bodyclass: '.#{$vary-default-prefix-class}#{$vary-loop-entity}';
+  
+  @at-root{
+    @if $vary-libsass {
+      html {
+        &#{vary-htmlclass($selector, $bodyclass)} {
           @content;
         }
       }
+    } @else {
+      #{vary-htmlclass($selector, $bodyclass)} {
+        @content;
+      }
     }
-  } @else {
-    @error "No parent found. I need the parent HTML class to place everything on its right place.";
   }
+
 }
 </pre>
 
-			<h4>vary-single-body()</h4>
-			<p>Creates variations with a .is-class body class.</p>
+			<h4>vary-single-parent()</h4>
+			<p>Creates variations with a .is-class parent/body class.</p>
 
 <pre>
-@mixin vary-single-body($entity) {
+@mixin vary-single-parent($entity) {
   // Update the global helper class
   $vary-loop-entity: $entity !global;
-  $selector-list: ();
 
-  @if & {
-    @at-root{
-      .#{$vary-default-bodyclass}#{$entity} & {
+  @at-root{
+    @if & {
+      .#{$vary-default-prefix-class}#{$entity} & {
         @content;
       }
-    }
-  } @else {
-    @at-root{
-      .#{$vary-default-bodyclass}#{$entity} {
+    } @else {
+      .#{$vary-default-prefix-class}#{$entity} {
         @content;
       }
     }
@@ -353,31 +348,48 @@ vary-htmlclass(
 }
 </pre>
 
-			<h4>vary-single-mod()</h4>
-			<p>Creates BEM modifiers for a wrapper element</p>
+			<h4>vary-single-append()</h4>
+			<p>Appends an .is-class class to the element.</p>
 
 <pre>
-@mixin vary-single-mod($entity) {
+@mixin vary-single-append($entity) {
+  // Update the global helper class
+  $vary-loop-entity: $entity !global;
+
+  @if not & {
+    @error 'No selector found. I need a selector to append the class to.';
+  }
+
+  &.#{$vary-default-prefix-class}#{$entity} {
+    @content;
+  }
+}
+</pre>
+
+      <h4>vary-single-modifier()</h4>
+      <p>Creates BEM modifiers for a wrapper element</p>
+
+
+<pre>
+@mixin vary-single-modifier($entity) {
   // Update the global helper class
   $vary-loop-entity: $entity !global;
 
   // Do we have a parent selector?
   @if not & {
-    @error "You can't create a modifier without a base.";
-  } @else {
+    @error 'You can\'t create a modifier without a base.';
+  } 
 
-    @at-root {
-      &--#{$entity} {
-        @content;
-      }
+  @at-root {
+    &--#{$entity} {
+      @content;
     }
-  
   }
 }
 </pre>
 
 
-			<h4>vary-single-body()</h4>
+			<h4>vary-single-custom()</h4>
 			<p>Doesn't create anything, it just gives you the right scope.</p>
 
 <pre>
@@ -393,29 +405,43 @@ vary-htmlclass(
 			<p>Creates variations for $vary-map.</p>
 
 <pre>
-@mixin vary($create, $for: "all", $not: (), $loop: $vary-map){
+@mixin vary($create: $vary-default-create, $for: 'all', $not: (), $loop: $vary-map){
   $vary-loop-map: $loop !global;
   $entity-list: vary-filter($for, $not, $loop);
 
+  $creation-modes: parent, insert, modifier, append, custom;
+
+  // Check if valid creation mode
+  @if not index($creation-modes, $create) {
+    @error 'There is no `#{$create}` creation mode in this version of vary.';
+  }
+
   // Go through all the creation modes
-  @if $create == "body" {
+  @if $create == 'parent' {
     // Body class
     @each $entity in $entity-list {
-      @include vary-single-body($entity) {
+      @include vary-single-parent($entity) {
         @content;
       }
     }
-  } @elseif $create == "htmlbody" {
+  } @elseif $create == 'insert' {
     // Body class with html parent class
     @each $entity in $entity-list {
       @include vary-single-htmlbody($entity) {
         @content;
       }
     }
-  } @elseif $create == "mod" {
+  } @elseif $create == 'modifier' {
     // BEM modifier
     @each $entity in $entity-list {
-      @include vary-single-mod($entity) {
+      @include vary-single-modifier($entity) {
+        @content;
+      }
+    }
+  } @elseif $create == 'append' {
+    // Appended class
+    @each $entity in $entity-list {
+      @include vary-single-append($entity) {
         @content;
       }
     }
