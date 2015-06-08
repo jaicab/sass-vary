@@ -68,6 +68,11 @@ $vary-libsass: true !default;
 $vary-default-bodyclass: 'is-' !default;
 
 
+/// Default variation type created by `@include vary() {}`.
+///
+/// @type String - One of 'mod', 'body', 'htmlbody', or a custom selector
+$vary-default-create: 'mod' !default;
+
 
 /// List of variations.
 /// Should be put with your other variables, before the mixins.
@@ -88,19 +93,16 @@ $vary-map: (
 ) !default;
 
 
-
 /// Current _entity_ during the loop. Can be used in custom creation mode.
 ///
 /// @type String
 $vary-loop-entity: '';
 
 
-
 /// Current _map_ during the loop. Can be used in custom creation.
 ///
 /// @type Map
 $vary-loop-map: $vary-map;
-
 
 
 /// Gets a value from a vary-like map using the current entity and map withing the vary scope.
@@ -128,7 +130,6 @@ $vary-loop-map: $vary-map;
 
   @return unquote($ret);
 }
-
 
 
 /// Filters the entities provieded into a final list
@@ -169,7 +170,6 @@ $vary-loop-map: $vary-map;
 }
 
 
-
 /// Adds a body class between the html class and the rest of selectors
 ///
 /// @param {List} $selector list - List of selectors
@@ -208,7 +208,6 @@ $vary-loop-map: $vary-map;
 
   @return $ret;
 }
-
 
 
 /// Creates variations with a .is-class body class. 
@@ -329,7 +328,6 @@ $vary-loop-map: $vary-map;
 }
 
 
-
 /// Creates BEM modifiers for a wrapper element
 ///
 /// @param {String} $entity - Modifier key to use.
@@ -378,7 +376,6 @@ $vary-loop-map: $vary-map;
 }
 
 
-
 /// Doesn't create anything, it just gives you the right scope.
 ///
 /// @param {String} $entity - Entity key to use.
@@ -416,7 +413,6 @@ $vary-loop-map: $vary-map;
   
   @content;
 }
-
 
 
 /// Creates variations for $vary-map
@@ -460,7 +456,7 @@ $vary-loop-map: $vary-map;
 ///     border: 10px solid red;  
 ///   }
 ///   
-@mixin vary($create: 'mod', $for: 'all', $not: (), $loop: $vary-map){
+@mixin vary($create: $vary-default-create, $for: 'all', $not: (), $loop: $vary-map){
   $vary-loop-map: $loop !global;
   $entity-list: vary-filter($for, $not, $loop);
 
