@@ -3,7 +3,7 @@
 ////
 /// -------------------------------------------------------------------------------------
 ///
-///                       _vary.scss v1.1 - Consistent CSS theming
+///                       _vary.scss v1.2 - Consistent CSS theming
 ///
 ///                                 jaicab.com/sass-vary/
 ///
@@ -113,28 +113,42 @@ $vary-loop-map: $vary-map;
 
 /// Gets a value from a vary-like map using the current entity and map withing the vary scope.
 ///
-/// @param {String} $key - Name of the variable you want to get
+/// @param {List} $list - List to access the variable wanted
 /// @param {String} $entity - Name of the entity you want to access
 ///
 /// @example scss
-///   vary-get('color-primary', user);
+///   vary-get(color-primary, user);
 ///   // -> #333
 ///
 /// @returns {String} Value of key for that entity
-@function vary-get($key, $entity: $vary-loop-entity, $map: $vary-loop-map) {
+@function vary-get($list, $entity: $vary-loop-entity, $map: $vary-loop-map) {
   $entity-map: map-get($map, $entity);
-
+  
+  // If there is no theme for that
   @if not $entity-map {
-    @error 'There is no `#{$entity}` entity in your variations list.';
+    @error "There is no `#{$entity}` entity in your variations list.";
   }
-
-  $ret: map-get($entity-map, $key);
-
-  @if not $ret {
-    @error 'The entity `#{$entity}` doesn\'t have a value for `#{$key}`.';    
+  
+  // Go for the value into the nested maps
+  @each $key in $list {
+    // Get the map for the current level
+    $current-map: map-get($entity-map, $key);
+  
+    // If not found
+    @if not $current-map {
+      @error 'The `#{$entity}` entity map does not have a `#{$key}` key in the format `#{$list}`.';
+    }
+  
+    // Current becomes the parent in next level or our value in the last
+    $entity-map: $current-map;
   }
-
-  @return unquote($ret);
+  
+  // If it's a map, needs more indications
+  @if type-of($entity-map) == map {
+    @error 'Seems like `#{$list}` leads not a value but to this map `#{$entity-map}`.';
+  }
+  
+  @return unquote($entity-map);
 }
 
 
