@@ -153,6 +153,42 @@ $vary-loop-map: $vary-map;
 
 
 
+// Get next/previous entity from the loop
+@function vary-jump-entity($jump: 1, $entity: $vary-loop-entity, $map: $vary-loop-map){
+  $list: map-keys($map);
+  $length: length($list);
+  $index: index($list, $entity);
+  $goto: $index + $jump;
+
+  @if $jump == 0 {
+    @warn "You should specify a jump different from 0. Otherwise, this call is pointless.";
+  }
+
+  // If over
+  @while $goto > $length {
+    $goto: $goto - $length;
+  }
+
+  // If under
+  @while $goto < 1 {
+    $goto: $goto + $length;
+  }
+
+  @return nth($list, $goto);
+}
+
+@function vary-get-next($list, $entity: $vary-loop-entity, $map: $vary-loop-map) {
+  $entity: vary-jump-entity(1, $entity, $map);
+  @return vary-get($list, $entity, $map);
+}
+
+@function vary-get-prev($list, $entity: $vary-loop-entity, $map: $vary-loop-map) {
+  $entity: vary-jump-entity(-1, $entity, $map);
+  @return vary-get($list, $entity, $map);
+}
+
+
+
 /// Filters the entities provieded into a final list
 ///
 /// @param {List} $included - List with the keys to use
