@@ -134,9 +134,9 @@ $vary-loop-map: $vary-map;
     @error 'The entity `#{$entity}` doesn\'t have a value for `#{$key}`.';    
   }
 
-  @return unquote($ret);
+  @return $ret;
 }
-
+q
 
 
 /// Filters the entities provieded into a final list
