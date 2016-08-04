@@ -133,8 +133,12 @@ $vary-loop-map: $vary-map;
   @if not $ret {
     @error 'The entity `#{$entity}` doesn\'t have a value for `#{$key}`.';    
   }
+  
+  @if type-of($ret) == "color" {
+    @return $ret;
+  }
 
-  @return $ret;
+  @return unquote($ret);
 }
 
 
