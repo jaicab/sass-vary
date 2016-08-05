@@ -1,0 +1,20 @@
+/// Power function
+/// @access private
+/// @param {Number} $x - number
+/// @param {Number} $n - power
+/// @return {Number} $x ^ $n
+@function _vary-pow($x, $n) {
+  $ret: 1;
+
+  @if $n >= 0 {
+    @for $i from 1 through $n {
+      $ret: ($ret * $x);
+    }
+  } @else {
+    @for $i from $n to 0 {
+      $ret: ($ret / $x);
+    }
+  }
+
+  @return $ret;
+}

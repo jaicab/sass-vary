@@ -18,10 +18,28 @@
 ///      user: (
 ///        'color-primary': blue,
 ///        'border': '1px solid #ff0',
+///        'palette': (
+///           primary: #5199e8,
+///           secondary: #808080,
+///           success: #f69c55,
+///           warning: #ffca00,
+///           alert: #fd1a42,
+///         ),
+///         'selectors': ('home', 'about', 'products', 'contact'),
+///         'header-width': '25em',
 ///      ),
 ///      admin: (
 ///        'color-primary': pink,
 ///        'border': '10px solid black',
+///        'palette': '(
+///           primary: #2199e8,
+///           secondary: #777,
+///           success: #3adb76,
+///           warning: #ffae00,
+///           alert: #ec5840,
+///         )',
+///         'selectors': ('users', 'settings', 'logout', 'login'),
+///         'header-width': '45em',
 ///      )
 ///    );
 ///
@@ -31,6 +49,8 @@
 ///     @include vary($create: body) {
 ///       background: vary-get('color-primary');
 ///       border: vary-get('border');
+///       color: map-get(vary-get-map('palette'), 'primary');
+///       max-width: vary-get-number('header-width');
 ///     }
 ///   }
 ///
@@ -39,12 +59,16 @@
 ///     background: red;
 ///   }
 ///   .is-user .foo {
-///     color: blue;  
-///     border: 1px solid #ff0;  
+///     background: blue;  
+///     border: 1px solid #ff0;
+///     color: #5199e8;
+///     max-width: 25em;   
 ///   }
 ///   .is-admin .foo {
-///     color: pink;  
-///     border: 10px solid red;  
+///     background: pink;  
+///     border: 10px solid red;
+///     color: #2199e8;
+///     max-width: 45em;
 ///   }
 ///
 ///
@@ -52,6 +76,8 @@
 /// @author Jaime Caballero (@jaicab_)
 ////
 
+
+@import 'api/api';
 
 
 /// Set to true if using libsass. Uses some extra CSS on HTML class scenario.
@@ -111,7 +137,7 @@ $vary-loop-map: $vary-map;
 
 
 
-/// Gets a value from a vary-like map using the current entity and map withing the vary scope.
+/// Gets a value from a vary-like map using the current entity and map within the vary scope.
 ///
 /// @param {String} $key - Name of the variable you want to get
 /// @param {String} $entity - Name of the entity you want to access
@@ -133,17 +159,139 @@ $vary-loop-map: $vary-map;
   @if not $ret {
     @error 'The entity `#{$entity}` doesn\'t have a value for `#{$key}`.';    
   }
-  
-  @if type-of($ret) == "color" {
-    @return $ret;
-  }
 
   @return unquote($ret);
 }
 
-
-/// Filters the entities provieded into a final list
+/// Gets a Color from a vary-like map using the current entity and map withing the vary scope.
 ///
+/// @param {String} $key - Name of the variable you want to get
+/// @param {String} $entity - Name of the entity you want to access
+///
+/// @example scss
+///   vary-get-color('color-primary', user);
+///   // -> #333
+///
+/// @returns {Color} Value of key converted to a Color for that entity
+@function vary-get-color($key, $entity: $vary-loop-entity, $map: $vary-loop-map) {
+  $entity-map: map-get($map, $entity);
+
+  @if not $entity-map {
+    @error 'There is no `#{$entity}` entity in your variations list.';
+  }
+
+  $ret: map-get($entity-map, $key);
+
+  @if not $ret {
+    @error 'The entity `#{$entity}` doesn\'t have a value for `#{$key}`.';    
+  }
+  
+  $ret-color: to-color(unquote($ret));
+
+  @if $ret-color != null {
+    @return $ret-color;
+  }
+  @else {
+    @error 'The value `#{$ret}` can\'t be converted to a Color Type.';
+  }
+}
+
+/// Gets a Map Object from a vary-like map using the current entity and map withing the vary scope. 
+///  If the value is a list, we return an empty list if it has a no item or we
+///  map each item to its index in the list.
+///
+/// @param {String} $key - Name of the variable you want to get
+/// @param {String} $entity - Name of the entity you want to access
+///
+/// @example scss
+///   vary-get-map('palette', user);
+///   // -> (
+          // primary: #2199e8,
+          // secondary: #777,
+          // success: #3adb76,
+          // warning: #ffae00,
+          // alert: #ec5840,
+         // )
+///
+/// @returns {Map} Value of key converted to a List for that entity
+@function vary-get-map($key, $entity: $vary-loop-entity, $map: $vary-loop-map) {
+  $entity-map: map-get($map, $entity);
+
+  @if not $entity-map {
+    @error 'There is no `#{$entity}` entity in your variations list.';
+  }
+
+  $ret: map-get($entity-map, $key);
+
+  @if not $ret {
+    @error 'The entity `#{$entity}` doesn\'t have a value for `#{$key}`.';    
+  }
+  
+
+  @return to-map(unquote($ret));
+}
+
+/// Gets a List Object from a vary-like map using the current entity and map withing the vary scope. 
+/// If the item can't be converted to a list it will be wrapped in a single-item list
+///
+/// @param {String} $key - Name of the variable you want to get
+/// @param {String} $entity - Name of the entity you want to access
+///
+/// @example scss
+///   vary-get-list('selectors', user);
+///   // -> ('home', 'about', 'products', 'contact')
+///
+/// @returns {List} Value of key converted to a List for that entity
+@function vary-get-list($key, $entity: $vary-loop-entity, $map: $vary-loop-map) {
+  $entity-map: map-get($map, $entity);
+
+  @if not $entity-map {
+    @error 'There is no `#{$entity}` entity in your variations list.';
+  }
+
+  $ret: map-get($entity-map, $key);
+
+  @if not $ret {
+    @error 'The entity `#{$entity}` doesn\'t have a value for `#{$key}`.';    
+  }
+  
+
+  @return to-list(unqoute($ret));
+}
+
+/// Gets a Number Object from a vary-like map using the current entity and map withing the vary scope. 
+///
+/// @param {String} $key - Name of the variable you want to get
+/// @param {String} $entity - Name of the entity you want to access
+///
+/// @example scss
+///   vary-get-number('header-width', user);
+///   // -> 25em
+///
+/// @returns {Number} Value of key converted to a Number for that entity
+@function vary-get-number($key, $entity: $vary-loop-entity, $map: $vary-loop-map) {
+  $entity-map: map-get($map, $entity);
+
+  @if not $entity-map {
+    @error 'There is no `#{$entity}` entity in your variations list.';
+  }
+
+  $ret: map-get($entity-map, $key);
+
+  @if not $ret {
+    @error 'The entity `#{$entity}` doesn\'t have a value for `#{$key}`.';    
+  }
+  
+  $ret-number: to-number(unqoute($ret));
+
+  @if $ret-number != null {
+    @return $ret-number;
+  }
+  @else {
+     @error 'The value `#{$ret}` can\'t be converted to a Number Type.';
+  }
+}
+
 /// @param {List} $included - List with the keys to use
 /// @param {List} $excluded - List with the keys NOT to use
 /// @param {Map} $map - Map to check keys against
