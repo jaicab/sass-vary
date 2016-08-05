@@ -1,0 +1,11 @@
+/// Helper function to throw when running in strict mode, or warn and return
+/// default value for expected type when running in non-strict mode.
+/// @param {*} $value
+/// @param {String} $expected-type
+@function _vary-throw($value, $expected-type) {
+  $return-value: map-get($vary-non-strict-defaults, $expected-type);
+
+  @warn 'Could not cast `#{inspect($value)}` to #{$expected-type}; returning `#{$return-value}`.';
+
+  @return $return-value;
+}

@@ -1,0 +1,52 @@
+/// Cast a string into a hexadecimal color
+/// @access private
+/// @param {string} $string - string
+/// @return {Color | String} - string or hex color depending on the match
+/// @require {function} _vary-hex-to-dec
+@function _vary-from-hex($string) {
+  $string: to-lower-case($string);
+  $r: ''; 
+  $g: '';
+  $b: '';
+  $hex: map-get($vary-constants, 'HEXADECIMAL_SPACE');
+  $length: str-length($string);
+  $max: if($length == 4, 1, 2);
+
+  // If the length of the value is neither 4, nor 7, it cannot be a valid
+  // hexadecimal triplet, therefore we warn and return the default color value
+  // (or throw in strict mode).
+  @if ($length != 4 and $length != 7) {
+    @return _vary-throw($string, 'color');
+  }
+
+  // Loop through the characters from the value, starting from the second one
+  // to omit the initial hash.
+  @for $i from 2 through $length {
+    $c: str-slice($string, $i, $i);
+
+    // If the character is not part of the hexadecimal space, the color cannot
+    // be a valid hexadecimal triplet, therefore we warn and return the default
+    // color value (or throw in strict mode).
+    @if not index($hex, $c) {
+      @return _vary-throw($string, 'color');
+    }
+
+    @if (str-length($r) < $max) {
+      $r: ($r + $c);
+    } @else if (str-length($g) < $max) {
+      $g: ($g + $c);
+    } @else if (str-length($b) < $max) {
+      $b: ($b + $c);
+    }
+  }
+
+  // If the triplet is a short one, duplicated each found valud to compose a
+  // long version, necessary for the _vary-hex-to-dec(..) calls.
+  @if $length == 4 {
+    $r: $r + $r;
+    $g: $g + $g;
+    $b: $b + $b;
+  }
+
+  @return rgb(_vary-hex-to-dec($r), _vary-hex-to-dec($g), _vary-hex-to-dec($b));
+}
